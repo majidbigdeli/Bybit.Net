@@ -5,7 +5,7 @@
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageId>Bybit.Net</PackageId>
+    <PackageId>Septa.Bybit.Net</PackageId>
     <Authors>JKorf</Authors>
     <PackageVersion>1.2.3</PackageVersion>
     <AssemblyVersion>1.2.3</AssemblyVersion>

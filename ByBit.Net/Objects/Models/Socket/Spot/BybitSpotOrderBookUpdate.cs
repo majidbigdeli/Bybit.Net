@@ -33,4 +33,17 @@ namespace Bybit.Net.Objects.Models.Socket.Spot
         [JsonProperty("b")]
         public IEnumerable<BybitSpotOrderBookEntry> Bids { get; set; } = Array.Empty<BybitSpotOrderBookEntry>();
     }
+
+    public class ByBitDiffSpotOrderBookUpdate : BybitSpotOrderBookUpdate
+    {
+        [JsonProperty("v")]
+        public string Version { get; set; }
+
+        [JsonProperty("f")]
+        public bool FullUpdate { get; set; }
+
+
+
+    }
+
 }
