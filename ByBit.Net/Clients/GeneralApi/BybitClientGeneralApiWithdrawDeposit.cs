@@ -118,7 +118,7 @@ namespace Bybit.Net.Clients.GeneralApi
             parameters.AddOptionalParameter("coin", asset);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var result = await _baseClient.SendRequestAsync<BybitData<IEnumerable<BybitAssetInfo>>>(_baseClient.GetUrl("/asset/v1/private/coin-info/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitData<IEnumerable<BybitAssetInfo>>>(_baseClient.GetUrl("/asset/v3/private/coin-info/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
             return result.As<IEnumerable<BybitAssetInfo>>(result.Data?.Data);
         }
 

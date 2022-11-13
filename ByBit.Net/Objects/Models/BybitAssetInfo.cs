@@ -21,7 +21,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Withdrawable quantity remaining
         /// </summary>
-        [JsonProperty("remain_amount")]
+        [JsonProperty("remainAmount")]
         public decimal? RemainingWithdrawableQuantity { get; set; }
         /// <summary>
         /// Networks info
@@ -38,7 +38,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Network type
         /// </summary>
-        [JsonProperty("chain_type")]
+        [JsonProperty("chainType")]
         public string NetworkType { get; set; } = string.Empty;
         /// <summary>
         /// Number of confirmations needed for deposit
@@ -48,22 +48,42 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Withdrawal fee
         /// </summary>
-        [JsonProperty("withdraw_fee")]
+        [JsonProperty("withdrawFee")]
         public decimal? WithdrawFee { get; set; }
         /// <summary>
         /// Deposit fee
         /// </summary>
-        [JsonProperty("deposit_min")]
+        [JsonProperty("depositMin")]
         public decimal? MinimalDeposit { get; set; }
         /// <summary>
         /// Minimal withdrawal amount
         /// </summary>
-        [JsonProperty("withdraw_min")]
+        [JsonProperty("withdrawMin")]
         public decimal? MinimalWithdrawal { get; set; }
         /// <summary>
         /// Network name
         /// </summary>
         [JsonProperty("chain")]
         public string Network { get; set; } = string.Empty;
+
+        /// <summary>
+        /// CanDeposit
+        /// </summary>
+        [JsonProperty("chainDeposit")]
+        public string CanDeposit { get; set; }
+
+        /// <summary>
+        /// chainWithdraw
+        /// </summary>
+        [JsonProperty("chainWithdraw")]
+        public string CanWithdraw { get; set; }
+
+        /// <summary>
+        /// CanDeposit
+        /// </summary>
+        [JsonProperty("minAccuracy")]
+        public string MinAccuracy { get; set; }
+
+
     }
 }
