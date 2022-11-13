@@ -127,5 +127,11 @@ namespace Bybit.Net.Objects.Models.Socket.Spot
         /// </summary>
         [JsonProperty("v")]
         public decimal Leverage { get; set; }
+
+        /// <summary>
+        /// Leverage
+        /// </summary>
+        [JsonProperty("t")]
+        public string TradeId { get; set; }
     }
 }

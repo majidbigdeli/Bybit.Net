@@ -32,7 +32,15 @@ namespace Bybit.Net.Objects.Internal
         /// Cursor for requesting next/previous page
         /// </summary>
         public string? Cursor { get; set; }
+
+        [JsonProperty("nextPageCursor")]
+        public string NextPageCursor { get; set; } = string.Empty;
+
     }
+
+
+
+
 
     /// <summary>
     /// Cursor paged data wrapper

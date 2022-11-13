@@ -29,17 +29,17 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Network type
         /// </summary>
-        [JsonProperty("chain_type")]
+        [JsonProperty("chainType")]
         public string NetworkType { get; set; } = string.Empty;
         /// <summary>
         /// Deposit address
         /// </summary>
-        [JsonProperty("address_deposit")]
+        [JsonProperty("addressDeposit")]
         public string Address { get; set; } = string.Empty;
         /// <summary>
         /// Tag to use for deposit
         /// </summary>
-        [JsonProperty("tag_deposit")]
+        [JsonProperty("tagDeposit")]
         public string DepositTag { get; set; } = string.Empty;
         /// <summary>
         /// Network

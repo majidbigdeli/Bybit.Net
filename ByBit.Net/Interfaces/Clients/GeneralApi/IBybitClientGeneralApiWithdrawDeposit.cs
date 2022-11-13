@@ -40,7 +40,6 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
         /// <param name="asset">Filter by asset</param>
         /// <param name="startTime">Filter by start time</param>
         /// <param name="endTime">Filter by end time</param>
-        /// <param name="direction">Filter by direction</param>
         /// <param name="limit">Max amount of results</param>
         /// <param name="cursor">Page cursor</param>
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
@@ -50,7 +49,6 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
-            SearchDirection? direction = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
@@ -75,7 +73,6 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
-            SearchDirection? direction = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
@@ -153,6 +150,7 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
         /// <returns></returns>
         Task<WebCallResult<BybitDepositAddress>> GetDepositAddressesAsync(
             string asset,
+            string chain,
             long? receiveWindow = null,
             CancellationToken ct = default);
     }

@@ -29,7 +29,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Transaction id
         /// </summary>
-        [JsonProperty("tx_id")]
+        [JsonProperty("txID")]
         public string TransactionId { get; set; } = string.Empty;
         /// <summary>
         /// Status
@@ -39,7 +39,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Address
         /// </summary>
-        [JsonProperty("to_address")]
+        [JsonProperty("toAddress")]
         public string ToAddress { get; set; } = string.Empty;
         /// <summary>
         /// Tag
@@ -48,13 +48,13 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Deposit fee
         /// </summary>
-        [JsonProperty("deposit_fee")]
+        [JsonProperty("depositFee")]
         public decimal? DepositFee { get; set; }
         /// <summary>
         /// Success time
         /// </summary>
         [JsonConverter(typeof(DateTimeConverter))]
-        [JsonProperty("success_at")]
+        [JsonProperty("successAt")]
         public DateTime SuccessTime { get; set; }
         /// <summary>
         /// Number of confirmations
@@ -63,12 +63,13 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Transaction sequence number
         /// </summary>
-        [JsonProperty("tx_index")]
+        [JsonProperty("txIndex")]
         public string TransactionIndex { get; set; } = string.Empty;
         /// <summary>
         /// Hash number on the chain
         /// </summary>
-        [JsonProperty("block_hash")]
+        [JsonProperty("blockHash")]
         public string BlockHash { get; set; } = string.Empty;
+
     }
 }

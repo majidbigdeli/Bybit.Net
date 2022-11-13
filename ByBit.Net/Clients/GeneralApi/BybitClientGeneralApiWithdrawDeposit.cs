@@ -57,22 +57,20 @@ namespace Bybit.Net.Clients.GeneralApi
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
-            SearchDirection? direction = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
+            parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("coin", asset);
-            parameters.AddOptionalParameter("start_time", DateTimeConverter.ConvertToSeconds(startTime));
-            parameters.AddOptionalParameter("end_time", DateTimeConverter.ConvertToSeconds(endTime));
-            parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("direction", direction == null ? null : JsonConvert.SerializeObject(direction, new SearchDirectionConverter(false)));
             parameters.AddOptionalParameter("cursor", cursor);
+            parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitDeposit>>>(_baseClient.GetUrl("/asset/v1/private/deposit/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitDeposit>>>(_baseClient.GetUrl("/asset/v3/private/deposit/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion
@@ -85,23 +83,21 @@ namespace Bybit.Net.Clients.GeneralApi
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
-            SearchDirection? direction = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
-            parameters.AddOptionalParameter("withdraw_id", withdrawalId);
+            parameters.AddOptionalParameter("withdrawID", withdrawalId);
+            parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToSeconds(startTime));
+            parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("coin", asset);
-            parameters.AddOptionalParameter("start_time", DateTimeConverter.ConvertToSeconds(startTime));
-            parameters.AddOptionalParameter("end_time", DateTimeConverter.ConvertToSeconds(endTime));
-            parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("direction", direction == null ? null : JsonConvert.SerializeObject(direction, new SearchDirectionConverter(false)));
             parameters.AddOptionalParameter("cursor", cursor);
+            parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitWithdraw>>>(_baseClient.GetUrl("/asset/v1/private/withdraw/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitWithdraw>>>(_baseClient.GetUrl("/asset/v3/private/withdraw/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion
@@ -195,14 +191,16 @@ namespace Bybit.Net.Clients.GeneralApi
         /// <inheritdoc />
         public async Task<WebCallResult<BybitDepositAddress>> GetDepositAddressesAsync(
             string asset,
+            string chain,
             long? receiveWindow = null,
             CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
-            parameters.AddOptionalParameter("coin", asset);
+            parameters.AddParameter("coin", asset);
+            parameters.AddOptionalParameter("chainType", chain);
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<BybitDepositAddress>(_baseClient.GetUrl("/asset/v1/private/deposit/address"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitDepositAddress>(_baseClient.GetUrl("/asset/v3/private/deposit/address/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion

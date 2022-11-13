@@ -28,7 +28,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Trasaction id
         /// </summary>
-        [JsonProperty("tx_id")]
+        [JsonProperty("txID")]
         public string TransactionId { get; set; } = string.Empty;
         /// <summary>
         /// Status
@@ -37,7 +37,7 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// To address
         /// </summary>
-        [JsonProperty("to_address")]
+        [JsonProperty("toAddress")]
         public string ToAddress { get; set; } = string.Empty;
         /// <summary>
         /// Tag
@@ -46,24 +46,24 @@ namespace Bybit.Net.Objects.Models
         /// <summary>
         /// Withdrawal fee
         /// </summary>
-        [JsonProperty("withdraw_fee")]
+        [JsonProperty("withdrawFee")]
         public decimal? WithdrawFee { get; set; }
         /// <summary>
         /// Creation time
         /// </summary>
-        [JsonProperty("create_time")]
+        [JsonProperty("createTime")]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime CreateTime { get; set; }
         /// <summary>
         /// Last update time
         /// </summary>
-        [JsonProperty("update_time")]
+        [JsonProperty("updateTime")]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime UpdateTime { get; set; }
         /// <summary>
         /// Withdrawal id
         /// </summary>
-        [JsonProperty("withdraw_id")]
+        [JsonProperty("withdrawId")]
         public string WithdrawId { get; set; } = string.Empty;
     }
 }
