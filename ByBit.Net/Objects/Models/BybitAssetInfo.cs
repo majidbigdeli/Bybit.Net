@@ -44,7 +44,7 @@ namespace Bybit.Net.Objects.Models
         /// Number of confirmations needed for deposit
         /// </summary>
         [JsonProperty("confirmation")]
-        public int ConfirmationsNeeded { get; set; }
+        public int? ConfirmationsNeeded { get; set; }
         /// <summary>
         /// Withdrawal fee
         /// </summary>
