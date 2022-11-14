@@ -95,9 +95,11 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get open orders
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotOrderWrapper>> GetOrdersAsync(string? symbol = null, long? orderId = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
+        public async Task<WebCallResult<BybitSpotOrderWrapper>> GetOrdersAsync(string? symbol = null, long? orderId = null, DateTime? startTime = null, DateTime? endTime = null, int? limit = null,  long? receiveWindow = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
+            parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
+            parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("orderId", orderId);
             parameters.AddOptionalParameter("symbol", symbol);
             parameters.AddOptionalParameter("limit", limit);
@@ -151,7 +153,7 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get user trades
 
         /// <inheritdoc />
-        public async Task<WebCallResult<IEnumerable<BybitSpotUserTrade>>> GetUserTradesAsync(string? symbol = null,string orderId = null, long? fromId = null, long? toId = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotUserTrade>>> GetUserTradesAsync(string? symbol = null, string orderId = null, long? fromId = null, long? toId = null, int? limit = null, long? receiveWindow = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
             parameters.AddOptionalParameter("symbol", symbol);

@@ -51,7 +51,7 @@ namespace Bybit.Net.Objects.Models.Spot
         /// <summary>
         /// Trade time
         /// </summary>
-        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("creatTime"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime TradeTime { get; set; }
         /// <summary>
         /// Is buyer
