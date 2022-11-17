@@ -51,7 +51,7 @@ namespace Bybit.Net.Objects.Models.Spot
         /// <summary>
         /// Trade time
         /// </summary>
-        [JsonProperty("creatTime"), JsonConverter(typeof(DateTimeConverter))]
+        [JsonProperty("time"), JsonConverter(typeof(DateTimeConverter))]
         public DateTime TradeTime { get; set; }
         /// <summary>
         /// Is buyer
@@ -78,6 +78,13 @@ namespace Bybit.Net.Objects.Models.Spot
         /// Maker rebate
         /// </summary>
         public decimal MakerRebate { get; set; }
+
+        /// <summary>
+        /// Execution Time
+        /// </summary>
+        [JsonProperty("executionTime"), JsonConverter(typeof(DateTimeConverter))]
+        public DateTime ExecutionTime{ get; set; }
+
     }
 
     /// <summary>
