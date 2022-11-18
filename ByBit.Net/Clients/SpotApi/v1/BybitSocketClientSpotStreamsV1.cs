@@ -229,6 +229,15 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
+                if (desResult.Success)
+                {
+                    if (desResult.Data != null)
+                    {
+                        var fullUpdate = data.Data.Value<bool>("f");
+                        desResult.Data.FullUpdate = fullUpdate;
+                    }
+                }
+
                 var symbol = data.Data["symbol"]?.ToString();
                 desResult.Data.Symbol = string.IsNullOrWhiteSpace(desResult.Data.Symbol) ? symbol! : desResult.Data.Symbol;
                 handler(data.As(desResult.Data, symbol));

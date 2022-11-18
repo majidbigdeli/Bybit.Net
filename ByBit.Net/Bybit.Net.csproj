@@ -7,8 +7,8 @@
   <PropertyGroup>
     <PackageId>Septa.Bybit.Net</PackageId>
     <Authors>JKorf</Authors>
-    <PackageVersion>1.2.11</PackageVersion>
-    <AssemblyVersion>1.2.11</AssemblyVersion>
+    <PackageVersion>1.2.12</PackageVersion>
+    <AssemblyVersion>1.2.12</AssemblyVersion>
     <FileVersion>1.2.11</FileVersion>
     <Description>Bybit.Net is a .Net wrapper for the Bybit API. It includes all features the API provides, REST API and Websocket, using clear and readable objects including but not limited to Reading market info, Placing and managing orders and Reading balances and funds</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
