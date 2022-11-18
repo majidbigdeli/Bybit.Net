@@ -60,7 +60,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
         }
 
         /// <inheritdoc />
-        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, Action<DataEvent<BybitSpotOrderBookUpdate>> handler, CancellationToken ct = default)
+        public async Task<CallResult<UpdateSubscription>> SubscribeToOrderBookUpdatesAsync(string symbol, Action<DataEvent<ByBitDiffSpotOrderBookUpdate>> handler, CancellationToken ct = default)
         {
             var internalHandler = new Action<DataEvent<JToken>>(data =>
             {
@@ -74,13 +74,20 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotOrderBookUpdate>(internalData);
+                var desResult = _baseClient.DeserializeInternal<ByBitDiffSpotOrderBookUpdate>(internalData);
                 if (!desResult)
                 {
-                    _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotOrderBookUpdate)} object: " + desResult.Error);
+                    _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(ByBitDiffSpotOrderBookUpdate)} object: " + desResult.Error);
                     return;
                 }
-
+                if (desResult.Success)
+                {
+                    if (desResult.Data != null)
+                    {
+                        var fullUpdate = data.Data.Value<bool>("f");
+                        desResult.Data.FullUpdate = fullUpdate;
+                    }
+                }
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
             return await _baseClient.SubscribeInternalAsync(this,
