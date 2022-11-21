@@ -1,6 +1,7 @@
 ﻿using Bybit.Net.Enums;
 using Bybit.Net.Objects.Internal;
 using Bybit.Net.Objects.Models;
+using Bybit.Net.Objects.Models.Spot.v1;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
@@ -68,14 +69,15 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<BybitCursorPage<IEnumerable<BybitWithdraw>>>> GetWithdrawalHistoryAsync(
-            string? withdrawalId = null,
+        Task<WebCallResult<BybitCursorPage<IEnumerable<BybitWithdrawV1>>>> GetWithdrawalHistoryAsync(
+            long? withdrawalId = null,
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
+            int? withdrawType = 2,
             CancellationToken ct = default);
 
         /// <summary>

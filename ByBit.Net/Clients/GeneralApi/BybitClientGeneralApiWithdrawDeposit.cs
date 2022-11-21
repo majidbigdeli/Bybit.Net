@@ -3,6 +3,7 @@ using Bybit.Net.Enums;
 using Bybit.Net.Interfaces.Clients.GeneralApi;
 using Bybit.Net.Objects.Internal;
 using Bybit.Net.Objects.Models;
+using Bybit.Net.Objects.Models.Spot.v1;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Converters;
 using CryptoExchange.Net.Objects;
@@ -78,14 +79,15 @@ namespace Bybit.Net.Clients.GeneralApi
         #region Get withdrawal history
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitCursorPage<IEnumerable<BybitWithdraw>>>> GetWithdrawalHistoryAsync(
-            string? withdrawalId = null,
+        public async Task<WebCallResult<BybitCursorPage<IEnumerable<BybitWithdrawV1>>>> GetWithdrawalHistoryAsync(
+            long? withdrawalId = null,
             string? asset = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
             int? limit = null,
             string? cursor = null,
             long? receiveWindow = null,
+            int? withdrawType = 2,
             CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>();
@@ -94,10 +96,10 @@ namespace Bybit.Net.Clients.GeneralApi
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToSeconds(endTime));
             parameters.AddOptionalParameter("coin", asset);
             parameters.AddOptionalParameter("cursor", cursor);
-            parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
+            parameters.AddOptionalParameter("withdraw_type", withdrawType?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitWithdraw>>>(_baseClient.GetUrl("/asset/v3/private/withdraw/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitCursorPage<IEnumerable<BybitWithdrawV1>>>(_baseClient.GetUrl("/asset/v1/private/withdraw/record/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion

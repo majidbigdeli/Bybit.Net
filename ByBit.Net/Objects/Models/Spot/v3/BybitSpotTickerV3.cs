@@ -75,4 +75,6 @@ namespace Bybit.Net.Objects.Models.Spot.v3
         [JsonProperty("lp")]
         public decimal LastPrice { get; set; }
     }
+
+
 }
