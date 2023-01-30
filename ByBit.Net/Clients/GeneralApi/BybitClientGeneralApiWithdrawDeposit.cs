@@ -205,6 +205,15 @@ namespace Bybit.Net.Clients.GeneralApi
             return await _baseClient.SendRequestAsync<BybitDepositAddress>(_baseClient.GetUrl("/asset/v3/private/deposit/address/query"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
+        public async Task<WebCallResult<BybitApiKeyInfo>> GetApiKeyInfoAsync(long? receiveWindow = null, CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+
+            return await _baseClient.SendRequestAsync<BybitApiKeyInfo>(_baseClient.GetUrl("/user/v3/private/query-api"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+
+        }
+
         #endregion
     }
 }

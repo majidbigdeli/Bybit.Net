@@ -155,5 +155,6 @@ namespace Bybit.Net.Interfaces.Clients.GeneralApi
             string chain,
             long? receiveWindow = null,
             CancellationToken ct = default);
+        Task<WebCallResult<BybitApiKeyInfo>> GetApiKeyInfoAsync(long? receiveWindow = null, CancellationToken ct = default);
     }
 }

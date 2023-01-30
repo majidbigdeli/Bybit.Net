@@ -22,29 +22,25 @@ namespace Bybit.Net.Objects.Models
     }
 
     /// <summary>
-    /// Deposit address on a network
+    /// ApiKey info
     /// </summary>
-    public class BybitNetworkDepositAddress
+    public class BybitApiKeyInfo
     {
-        /// <summary>
-        /// Network type
-        /// </summary>
-        [JsonProperty("chainType")]
-        public string NetworkType { get; set; } = string.Empty;
-        /// <summary>
-        /// Deposit address
-        /// </summary>
-        [JsonProperty("addressDeposit")]
-        public string Address { get; set; } = string.Empty;
-        /// <summary>
-        /// Tag to use for deposit
-        /// </summary>
-        [JsonProperty("tagDeposit")]
-        public string DepositTag { get; set; } = string.Empty;
-        /// <summary>
-        /// Network
-        /// </summary>
-        [JsonProperty("chain")]
-        public string Network { get; set; } = string.Empty;
+        public string Id { get; set; }
+        public string Note { get; set; }
+        public string ApiKey { get; set; }
+        public int ReadOnly { get; set; }
+        public string Secret { get; set; }
+        public int Type { get; set; }
+        public int DeadlineDay { get; set; }
+        public DateTime ExpiredAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public int Unified { get; set; }
+        public int Uta { get; set; }
+        public long UserID { get; set; }
+        public int InviterID { get; set; }
+        public string VipLevel { get; set; }
+        public string MktMakerLevel { get; set; }
+        public int AffiliateID { get; set; }
     }
 }
