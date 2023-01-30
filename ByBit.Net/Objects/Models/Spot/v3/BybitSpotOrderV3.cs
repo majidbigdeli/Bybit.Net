@@ -7,17 +7,6 @@ using Bybit.Net.Enums;
 
 namespace Bybit.Net.Objects.Models.Spot.v3
 {
-    /// <summary>
-    /// Wrapper for symbols deserialization
-    /// </summary>
-    public class BybitSpotOrderWrapper
-    {
-        /// <summary>
-        /// List of spot orders
-        /// </summary>
-        [JsonProperty("list")]
-        public IEnumerable<BybitSpotOrderV3> Orders { get; set; } = Array.Empty<BybitSpotOrderV3>();
-    }
 
     /// <summary>
     /// Spot order info
