@@ -1,6 +1,5 @@
 ﻿using Bybit.Net.Enums;
 using Bybit.Net.Objects.Models.Spot;
-using Bybit.Net.Objects.Models.Spot.v1;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
@@ -55,7 +54,7 @@ namespace Bybit.Net.Interfaces.Clients.SpotApi.v3
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<BybitSpotOrderWrapper>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, int? limit = null, int? orderCategory = 0, long? receiveWindow = null, CancellationToken ct = default);
+        Task<WebCallResult<IEnumerable<BybitSpotOrderV3>>> GetOpenOrdersAsync(string? symbol = null, long? orderId = null, int? limit = null, int? orderCategory = 0, long? receiveWindow = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get orders
@@ -115,7 +114,7 @@ namespace Bybit.Net.Interfaces.Clients.SpotApi.v3
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<long>> PlaceBorrowOrderAsync(string asset, decimal quantity, long? receiveWindow = null, CancellationToken ct = default);
+        Task<WebCallResult<BybitBorrowOrderV3>> PlaceBorrowOrderAsync(string asset, decimal quantity, long? receiveWindow = null, CancellationToken ct = default);
 
         /// <summary>
         /// Place a new borrow order
@@ -126,7 +125,7 @@ namespace Bybit.Net.Interfaces.Clients.SpotApi.v3
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<long>> PlaceRepayOrderAsync(string asset, decimal quantity, long? receiveWindow = null, CancellationToken ct = default);
+        Task<WebCallResult<BybitRepayOrderV3>> PlaceRepayOrderAsync(string asset, decimal quantity, long? receiveWindow = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get borrow records

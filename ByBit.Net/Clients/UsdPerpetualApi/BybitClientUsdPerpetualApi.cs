@@ -1,12 +1,10 @@
-﻿using Bybit.Net.Clients.InversePerpetualApi;
-using Bybit.Net.Interfaces.Clients.UsdPerpetualApi;
+﻿using Bybit.Net.Interfaces.Clients.UsdPerpetualApi;
 using Bybit.Net.Objects;
 using Bybit.Net.Objects.Internal;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,12 +17,7 @@ namespace Bybit.Net.Clients.UsdPerpetualApi
     /// <inheritdoc cref="IBybitClientUsdPerpetualApi" />
     public class BybitClientUsdPerpetualApi : RestApiClient, IBybitClientUsdPerpetualApi
     {
-        private readonly BybitClient _baseClient;
-        private readonly BybitClientOptions _options;
-        private readonly Log _log;
-
         internal static TimeSyncState TimeSyncState = new TimeSyncState("USD Perpetual Api");
-
         internal BybitClientOptions ClientOptions { get; }
 
         /// <inheritdoc />
@@ -35,18 +28,21 @@ namespace Bybit.Net.Clients.UsdPerpetualApi
         public IBybitClientUsdPerpetualApiTrading Trading { get; }
 
         #region ctor
-        internal BybitClientUsdPerpetualApi(Log log, BybitClient baseClient, BybitClientOptions options)
-            : base(options, options.UsdPerpetualApiOptions)
+        internal BybitClientUsdPerpetualApi(Log log, BybitClientOptions options)
+            : base(log, options, options.UsdPerpetualApiOptions)
         {
-            _baseClient = baseClient;
-            _log = log;
-            _options = options;
-            ClientOptions = options;
+            if (!string.IsNullOrEmpty(options.Referer))
+            {
+                StandardRequestHeaders = new Dictionary<string, string>
+                {
+                    { "x-referer", options.Referer! }
+                };
+            }
 
             Account = new BybitClientUsdPerpetualApiAccount(this);
             ExchangeData = new BybitClientUsdPerpetualApiExchangeData(this);
             Trading = new BybitClientUsdPerpetualApiTrading(this);
-
+            ClientOptions = options;
             requestBodyFormat = RequestBodyFormat.FormData;
             ParameterPositions[HttpMethod.Delete] = HttpMethodParameterPosition.InUri;
         }
@@ -75,7 +71,7 @@ namespace Bybit.Net.Clients.UsdPerpetualApi
              JsonSerializer? deserializer = null,
              bool ignoreRatelimit = false) where T : class
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
             if (!result)
                 return result.As<BybitResult<T>>(default);
 
@@ -93,7 +89,7 @@ namespace Bybit.Net.Clients.UsdPerpetualApi
              bool signed = false,
              JsonSerializer? deserializer = null)
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
             if (!result)
                 return result.As<T>(default);
 
@@ -109,7 +105,7 @@ namespace Bybit.Net.Clients.UsdPerpetualApi
 
         /// <inheritdoc />
         public override TimeSyncInfo GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, _options.UsdPerpetualApiOptions.AutoTimestamp, _options.UsdPerpetualApiOptions.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan GetTimeOffset()

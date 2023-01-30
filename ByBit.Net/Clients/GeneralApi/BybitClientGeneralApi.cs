@@ -1,7 +1,6 @@
 ﻿using Bybit.Net.Clients.CopyTradingApi;
 using Bybit.Net.Clients.InversePerpetualApi;
 using Bybit.Net.Interfaces.Clients.GeneralApi;
-using Bybit.Net.Interfaces.Clients.SpotApi.v1;
 using Bybit.Net.Objects;
 using Bybit.Net.Objects.Internal;
 using CryptoExchange.Net;
@@ -21,9 +20,6 @@ namespace Bybit.Net.Clients.GeneralApi
     public class BybitClientGeneralApi : RestApiClient, IBybitClientGeneralApi
     {
         private readonly BybitClient _baseClient;
-        private readonly Log _log;
-        private readonly BybitClientOptions _options;
-
         internal BybitClientOptions ClientOptions { get; }
 
         /// <inheritdoc />
@@ -33,11 +29,17 @@ namespace Bybit.Net.Clients.GeneralApi
 
         #region ctor
         internal BybitClientGeneralApi(Log log, BybitClient baseClient, BybitClientOptions options)
-            : base(options, options.SpotApiOptions)
+            : base(log, options, options.SpotApiOptions)
         {
+            if (!string.IsNullOrEmpty(options.Referer))
+            {
+                StandardRequestHeaders = new Dictionary<string, string>
+                {
+                    { "x-referer", options.Referer! }
+                };
+            }
+
             _baseClient = baseClient;
-            _log = log;
-            _options = options;
             ClientOptions = options;
 
             Transfer = new BybitClientGeneralApiTransfer(this);
@@ -62,24 +64,6 @@ namespace Bybit.Net.Clients.GeneralApi
             return new Uri(BaseAddress.AppendPath(endpoint));
         }
 
-        internal async Task<WebCallResult<BybitResult<T>>> SendRequestWrapperAsync<T>(
-             Uri uri,
-             HttpMethod method,
-             CancellationToken cancellationToken,
-             Dictionary<string, object>? parameters = null,
-             bool signed = false,
-             JsonSerializer? deserializer = null) where T : class
-        {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
-            if (!result)
-                return result.As<BybitResult<T>>(default);
-
-            if (result.Data.ReturnCode != 0)
-                return result.AsError<BybitResult<T>>(new ServerError(result.Data.ReturnCode, result.Data.ReturnMessage));
-
-            return result.As(result.Data);
-        }
-
         internal async Task<WebCallResult<T>> SendRequestAsync<T>(
              Uri uri,
              HttpMethod method,
@@ -88,7 +72,7 @@ namespace Bybit.Net.Clients.GeneralApi
              bool signed = false,
              JsonSerializer? deserializer = null)
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
             if (!result)
                 return result.As<T>(default);
 
@@ -105,7 +89,7 @@ namespace Bybit.Net.Clients.GeneralApi
 
         /// <inheritdoc />
         public override TimeSyncInfo GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, _options.SpotApiOptions.AutoTimestamp, _options.SpotApiOptions.TimestampRecalculationInterval, BybitClientCopyTradingApi.TimeSyncState);
+            => new TimeSyncInfo(_log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, BybitClientInversePerpetualApi.TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan GetTimeOffset()

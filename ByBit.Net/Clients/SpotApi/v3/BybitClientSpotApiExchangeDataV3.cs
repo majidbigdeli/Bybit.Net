@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Bybit.Net.Interfaces.Clients.SpotApi.v3;
 using Bybit.Net.Objects.Models.Spot;
 using Bybit.Net.Objects.Models.Spot.v3;
-using Bybit.Net.Objects.Models.Spot.v1;
+using Bybit.Net.Objects.Internal;
 
 namespace Bybit.Net.Clients.SpotApi.v3
 {
@@ -41,9 +41,17 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get symbols
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotSymbolWrapper>> GetSymbolsAsync(CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotSymbolV3>>> GetSymbolsAsync(CancellationToken ct = default)
         {
-            return await _baseClient.SendRequestAsync<BybitSpotSymbolWrapper>(_baseClient.GetUrl("spot/v3/public/symbols"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotSymbolV3>>(_baseClient.GetUrl("spot/v3/public/symbols"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotSymbolV3>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotSymbolV3>>(Array.Empty<BybitSpotSymbolV3>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion
@@ -84,7 +92,7 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get trade history
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotTradeWrapper>> GetTradeHistoryAsync(string symbol, int? limit = null, CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotTradeV3>>> GetTradeHistoryAsync(string symbol, int? limit = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>()
             {
@@ -92,7 +100,15 @@ namespace Bybit.Net.Clients.SpotApi.v3
             };
             parameters.AddOptionalParameter("limit", limit?.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<BybitSpotTradeWrapper>(_baseClient.GetUrl("spot/v3/public/quote/trades"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotTradeV3>>(_baseClient.GetUrl("spot/v3/public/quote/trades"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotTradeV3>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotTradeV3>>(Array.Empty<BybitSpotTradeV3>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion
@@ -100,7 +116,7 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get klines
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotKlineWrapper>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotKlineV3>>> GetKlinesAsync(string symbol, KlineInterval interval, DateTime? startTime = null, DateTime? endTime = null, int? limit = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>()
             {
@@ -111,7 +127,15 @@ namespace Bybit.Net.Clients.SpotApi.v3
             parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
 
-            return await _baseClient.SendRequestAsync<BybitSpotKlineWrapper>(_baseClient.GetUrl("spot/v3/public/quote/kline"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotKlineV3>>(_baseClient.GetUrl("spot/v3/public/quote/kline"), HttpMethod.Get, ct, parameters).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotKlineV3>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotKlineV3>>(Array.Empty<BybitSpotKlineV3>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion
@@ -134,9 +158,17 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get tickers
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotTickerWrapper>> GetTickersAsync(CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotTickerV3>>> GetTickersAsync(CancellationToken ct = default)
         {
-            return await _baseClient.SendRequestAsync<BybitSpotTickerWrapper>(_baseClient.GetUrl("spot/v3/public/quote/ticker/24hr"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotTickerV3>>(_baseClient.GetUrl("spot/v3/public/quote/ticker/24hr"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotTickerV3>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotTickerV3>>(Array.Empty<BybitSpotTickerV3>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion
@@ -159,9 +191,17 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get prices
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotPriceWrapper>> GetPricesAsync(CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotPrice>>> GetPricesAsync(CancellationToken ct = default)
         {
-            return await _baseClient.SendRequestAsync<BybitSpotPriceWrapper>(_baseClient.GetUrl("spot/v3/public/quote/ticker/price"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotPrice>>(_baseClient.GetUrl("spot/v3/public/quote/ticker/price"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotPrice>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotPrice>>(Array.Empty<BybitSpotPrice>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion
@@ -184,9 +224,17 @@ namespace Bybit.Net.Clients.SpotApi.v3
         #region Get prices
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitSpotBookPriceWrapper>> GetBookPricesAsync(CancellationToken ct = default)
+        public async Task<WebCallResult<IEnumerable<BybitSpotBookPriceV3>>> GetBookPricesAsync(CancellationToken ct = default)
         {
-            return await _baseClient.SendRequestAsync<BybitSpotBookPriceWrapper>(_baseClient.GetUrl("spot/v3/public/quote/ticker/bookTicker"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitList<BybitSpotBookPriceV3>>(_baseClient.GetUrl("spot/v3/public/quote/ticker/bookTicker"), HttpMethod.Get, ct, null).ConfigureAwait(false);
+
+            if (!result || result.Data == null)
+                return result.As<IEnumerable<BybitSpotBookPriceV3>>(default);
+
+            if (result.Data.List == null)
+                return result.As<IEnumerable<BybitSpotBookPriceV3>>(Array.Empty<BybitSpotBookPriceV3>());
+
+            return result.As(result.Data.List);
         }
 
         #endregion

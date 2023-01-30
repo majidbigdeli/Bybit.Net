@@ -1,26 +1,18 @@
 ﻿using Bybit.Net.Enums;
-using Bybit.Net.Interfaces.Clients.SpotApi;
 using Bybit.Net.Objects;
 using Bybit.Net.Objects.Internal;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.CommonObjects;
-using CryptoExchange.Net.Interfaces;
 using CryptoExchange.Net.Interfaces.CommonClients;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Bybit.Net.Clients.SpotApi.v1;
-using Bybit.Net.Clients.SpotApi.v3;
-using Bybit.Net.Interfaces.Clients.SpotApi.v1;
-using Bybit.Net.Interfaces.Clients.SpotApi.v3;
 
 namespace Bybit.Net.Clients.SpotApi
 {
@@ -29,10 +21,7 @@ namespace Bybit.Net.Clients.SpotApi
     /// </summary>
     public abstract class BybitClientBaseSpotApi : RestApiClient, ISpotClient
     {
-        private readonly BybitClient _baseClient;
-        private readonly BybitClientOptions _options;
-        private readonly Log _log;
-
+        internal BybitClientOptions ClientOptions { get; }
         internal static TimeSyncState TimeSyncState = new TimeSyncState("Spot Api");
 
         /// <inheritdoc />
@@ -43,8 +32,6 @@ namespace Bybit.Net.Clients.SpotApi
         /// <inheritdoc />
         public abstract Task<WebCallResult<OrderId>> PlaceOrderAsync(string symbol, CommonOrderSide side, CommonOrderType type, decimal quantity, decimal? price = null, string? accountId = null, string? clientOrderId = null, CancellationToken ct = new CancellationToken());
 
-        internal BybitClientOptions ClientOptions { get; }
-
         /// <inheritdoc />
         public abstract Task<WebCallResult<OrderId>> CancelOrderAsync(string orderId, string? symbol = null, CancellationToken ct = new CancellationToken());
 
@@ -53,14 +40,10 @@ namespace Bybit.Net.Clients.SpotApi
 
      
         #region ctor
-        internal BybitClientBaseSpotApi(Log log, BybitClient baseClient, BybitClientOptions options)
-            : base(options, options.SpotApiOptions)
+        internal BybitClientBaseSpotApi(Log log, BybitClientOptions options)
+            : base(log, options, options.SpotApiOptions)
         {
-            _baseClient = baseClient;
-            _log = log;
-            _options = options;
             ClientOptions = options;
-
             requestBodyFormat = RequestBodyFormat.FormData;
             ParameterPositions[HttpMethod.Delete] = HttpMethodParameterPosition.InUri;
         }
@@ -89,7 +72,7 @@ namespace Bybit.Net.Clients.SpotApi
              JsonSerializer? deserializer = null,
              bool ignoreRatelimit = false)
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
             if (!result)
                 return result.As<T>(default);
 
@@ -193,7 +176,7 @@ namespace Bybit.Net.Clients.SpotApi
 
         /// <inheritdoc />
         public override TimeSyncInfo GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, _options.SpotApiOptions.AutoTimestamp, _options.SpotApiOptions.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan GetTimeOffset()

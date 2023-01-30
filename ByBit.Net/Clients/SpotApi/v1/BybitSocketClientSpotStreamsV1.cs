@@ -13,15 +13,14 @@ using Bybit.Net.Objects.Models.Socket.Spot;
 using Bybit.Net.Enums;
 using Bybit.Net.Converters;
 using Bybit.Net.Interfaces.Clients.SpotApi.v1;
-using Bybit.Net.Interfaces.Clients.SpotApi.v2;
 
 namespace Bybit.Net.Clients.SpotApi.v1
 {
     /// <inheritdoc cref="IBybitSocketClientSpotStreamsV1"/>
     public class BybitSocketClientSpotStreamsV1 : BybitBaseSocketClientSpotStreams, IBybitSocketClientSpotStreamsV1
     {
-        internal BybitSocketClientSpotStreamsV1(Log log, BybitSocketClient baseClient, BybitSocketClientOptions options)
-            : base(log, baseClient, options, options.SpotStreamsV1Options)
+        internal BybitSocketClientSpotStreamsV1(Log log, BybitSocketClientOptions options)
+            : base(log, options, options.SpotStreamsV1Options)
         {
         }
 
@@ -40,7 +39,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotTradeUpdate>(internalData);
+                var desResult = Deserialize<BybitSpotTradeUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotTradeUpdate)} object: " + desResult.Error);
@@ -49,7 +48,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
 
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "trade",
@@ -74,7 +73,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<ByBitDiffSpotOrderBookUpdate>(internalData);
+                var desResult = Deserialize<ByBitDiffSpotOrderBookUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(ByBitDiffSpotOrderBookUpdate)} object: " + desResult.Error);
@@ -90,7 +89,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                 }
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "depth",
@@ -115,7 +114,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotKlineUpdate>(internalData);
+                var desResult = Deserialize<BybitSpotKlineUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotKlineUpdate)} object: " + desResult.Error);
@@ -124,7 +123,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
 
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = $"kline_{KlineIntervalSpotConverter.ToString(interval)}",
@@ -150,7 +149,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotTickerUpdate>(internalData);
+                var desResult = Deserialize<BybitSpotTickerUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotTickerUpdate)} object: " + desResult.Error);
@@ -159,7 +158,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
 
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "realtimes",
@@ -184,7 +183,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotOrderBookUpdate>(internalData);
+                var desResult = Deserialize<BybitSpotOrderBookUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotOrderBookUpdate)} object: " + desResult.Error);
@@ -193,7 +192,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
 
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "mergedDepth",
@@ -222,7 +221,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<ByBitDiffSpotOrderBookUpdate>(internalData);
+                var desResult = Deserialize<ByBitDiffSpotOrderBookUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(ByBitDiffSpotOrderBookUpdate)} object: " + desResult.Error);
@@ -242,7 +241,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                 desResult.Data.Symbol = string.IsNullOrWhiteSpace(desResult.Data.Symbol) ? symbol! : desResult.Data.Symbol;
                 handler(data.As(desResult.Data, symbol));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "diffDepth",
@@ -267,7 +266,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
                     return;
                 }
 
-                var desResult = _baseClient.DeserializeInternal<BybitSpotLeverageUpdate>(internalData);
+                var desResult = Deserialize<BybitSpotLeverageUpdate>(internalData);
                 if (!desResult)
                 {
                     _log.Write(LogLevel.Warning, $"Failed to deserialize {nameof(BybitSpotLeverageUpdate)} object: " + desResult.Error);
@@ -276,7 +275,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
 
                 handler(data.As(desResult.Data, data.Data["symbol"]?.ToString()));
             });
-            return await _baseClient.SubscribeInternalAsync(this,
+            return await SubscribeAsync(
                 new BybitSpotRequestMessageV1()
                 {
                     Operation = "lt",

@@ -1,5 +1,4 @@
-﻿using Bybit.Net.Clients.InversePerpetualApi;
-using Bybit.Net.Interfaces.Clients.InverseFuturesApi;
+﻿using Bybit.Net.Interfaces.Clients.InverseFuturesApi;
 using Bybit.Net.Objects;
 using Bybit.Net.Objects.Internal;
 using CryptoExchange.Net;
@@ -18,13 +17,9 @@ namespace Bybit.Net.Clients.InverseFuturesApi
     /// <inheritdoc cref="IBybitClientInverseFuturesApi" />
     public class BybitClientInverseFuturesApi : RestApiClient, IBybitClientInverseFuturesApi
     {
-        private readonly BybitClient _baseClient;
-        private readonly BybitClientOptions _options;
-        private readonly Log _log;
-
-        internal BybitClientOptions ClientOptions { get; }
 
         internal static TimeSyncState TimeSyncState = new TimeSyncState("Inverse Futures Api");
+        internal BybitClientOptions ClientOptions { get; }
 
         /// <inheritdoc />
         public IBybitClientInverseFuturesApiAccount Account { get; }
@@ -34,12 +29,17 @@ namespace Bybit.Net.Clients.InverseFuturesApi
         public IBybitClientInverseFuturesApiTrading Trading { get; }
 
         #region ctor
-        internal BybitClientInverseFuturesApi(Log log, BybitClient baseClient, BybitClientOptions options)
-            : base(options, options.InverseFuturesApiOptions)
+        internal BybitClientInverseFuturesApi(Log log, BybitClientOptions options)
+            : base(log, options, options.InverseFuturesApiOptions)
         {
-            _baseClient = baseClient;
-            _log = log;
-            _options = options;
+            if (!string.IsNullOrEmpty(options.Referer))
+            {
+                StandardRequestHeaders = new Dictionary<string, string>
+                {
+                    { "x-referer", options.Referer! }
+                };
+            }
+
             ClientOptions = options;
 
             Account = new BybitClientInverseFuturesApiAccount(this);
@@ -74,7 +74,7 @@ namespace Bybit.Net.Clients.InverseFuturesApi
              JsonSerializer? deserializer = null,
              bool ignoreRatelimit = false) where T : class
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer, ignoreRatelimit: ignoreRatelimit).ConfigureAwait(false);
             if (!result)
                 return result.As<BybitResult<T>>(default);
 
@@ -92,7 +92,7 @@ namespace Bybit.Net.Clients.InverseFuturesApi
              bool signed = false,
              JsonSerializer? deserializer = null)
         {
-            var result = await _baseClient.SendRequestInternal<BybitResult<T>>(this, uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
+            var result = await base.SendRequestAsync<BybitResult<T>>(uri, method, cancellationToken, parameters, signed, deserializer: deserializer).ConfigureAwait(false);
             if (!result)
                 return result.As<T>(default);
 
@@ -108,7 +108,7 @@ namespace Bybit.Net.Clients.InverseFuturesApi
 
         /// <inheritdoc />
         public override TimeSyncInfo GetTimeSyncInfo()
-            => new TimeSyncInfo(_log, _options.InverseFuturesApiOptions.AutoTimestamp, _options.InverseFuturesApiOptions.TimestampRecalculationInterval, TimeSyncState);
+            => new TimeSyncInfo(_log, Options.AutoTimestamp, Options.TimestampRecalculationInterval, TimeSyncState);
 
         /// <inheritdoc />
         public override TimeSpan GetTimeOffset()

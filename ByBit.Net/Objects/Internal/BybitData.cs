@@ -1,4 +1,6 @@
-﻿using Bybit.Net.Objects.Models;
+﻿using Bybit.Net.Enums;
+using Bybit.Net.Objects.Models;
+using CryptoExchange.Net.Converters;
 using Newtonsoft.Json;
 
 namespace Bybit.Net.Objects.Internal
@@ -18,6 +20,8 @@ namespace Bybit.Net.Objects.Internal
 
         [JsonProperty("list")]
         internal T ListData { set => Data = value; get => Data; }
+        [JsonProperty("dataList")]
+        internal T ListData1 { set => Data = value; get => Data; }
         [JsonProperty("rows")]
         internal T RowData { set => Data = value; get => Data; }
     }
@@ -26,7 +30,7 @@ namespace Bybit.Net.Objects.Internal
     /// Cursor paged data wrapper
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BybitCursorPage<T> : BybitData<T> 
+    public class BybitCursorPage<T> : BybitData<T>
     {
         /// <summary>
         /// Cursor for requesting next/previous page
@@ -34,13 +38,31 @@ namespace Bybit.Net.Objects.Internal
         public string? Cursor { get; set; }
 
         [JsonProperty("nextPageCursor")]
-        public string NextPageCursor { get; set; } = string.Empty;
+        internal string? NextPageCursor { set => Cursor = value; get => Cursor; }
 
+        /// <summary>
+        /// Result total size
+        /// </summary>
+        public int? ResultTotalSize { get; set; }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public string? Currency { get; set; } = string.Empty;
     }
 
-
-
-
+    /// <summary>
+    /// Cursof paged data wrapper for unified margin
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class BybitDerivativesCursorPage<T> : BybitCursorPage<T>
+    {
+        /// <summary>
+        /// Type of derivatives product
+        /// </summary>
+        [JsonProperty("category"), JsonConverter(typeof(EnumConverter))]
+        public Category Category { get; set; } = Category.Undefined;
+    }
 
     /// <summary>
     /// Cursor paged data wrapper
@@ -55,7 +77,7 @@ namespace Bybit.Net.Objects.Internal
         public int CurrentPage { get; set; }
     }
 
-    internal class BybitPositionData: BybitData<BybitPosition>
+    internal class BybitPositionData : BybitData<BybitPosition>
     {
         [JsonProperty("is_valid")]
         public bool IsValid { get; set; }
