@@ -7,7 +7,7 @@ namespace Bybit.Net.Objects.Models.Spot
     /// <summary>
     /// User trade info
     /// </summary>
-    public class BybitSpotUserTrade
+    public class BybitSpotUserTradeV3
     {
         /// <summary>
         /// Trade id
@@ -57,10 +57,14 @@ namespace Bybit.Net.Objects.Models.Spot
         /// Is buyer
         /// </summary>
         public bool IsBuyer { get; set; }
+        [JsonProperty("isBuyer")]
+        private int isBuyer { get => IsBuyer ? 1 : 0; set => IsBuyer = value == 1; }
         /// <summary>
         /// Is maker
         /// </summary>
         public bool IsMaker { get; set; }
+        [JsonProperty("isMaker")]
+        private int isMaker { get => IsMaker ? 1 : 0; set => IsMaker = value == 1; }
         /// <summary>
         /// Fee details
         /// </summary>
@@ -78,31 +82,5 @@ namespace Bybit.Net.Objects.Models.Spot
         /// Maker rebate
         /// </summary>
         public decimal MakerRebate { get; set; }
-
-        /// <summary>
-        /// Execution Time
-        /// </summary>
-        [JsonProperty("executionTime"), JsonConverter(typeof(DateTimeConverter))]
-        public DateTime ExecutionTime{ get; set; }
-
-    }
-
-    /// <summary>
-    /// Fee info
-    /// </summary>
-    public class BybitTradeFee
-    {
-        /// <summary>
-        /// Fee token id
-        /// </summary>
-        public string FeeTokenId { get; set; } = string.Empty;
-        /// <summary>
-        /// Fee token name
-        /// </summary>
-        public string FeeTokenName { get; set; } = string.Empty;
-        /// <summary>
-        /// Fee
-        /// </summary>
-        public decimal Fee { get; set; }
     }
 }

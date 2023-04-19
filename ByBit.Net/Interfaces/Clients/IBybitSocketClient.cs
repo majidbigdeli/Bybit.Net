@@ -6,6 +6,8 @@ using Bybit.Net.Interfaces.Clients.SpotApi.v1;
 using Bybit.Net.Interfaces.Clients.SpotApi.v2;
 using Bybit.Net.Interfaces.Clients.SpotApi.v3;
 using Bybit.Net.Interfaces.Clients.UsdPerpetualApi;
+using Bybit.Net.Interfaces.Clients.V5;
+using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Interfaces;
 
 namespace Bybit.Net.Interfaces.Clients
@@ -51,5 +53,27 @@ namespace Bybit.Net.Interfaces.Clients
         /// Contract private streams
         /// </summary>
         public IBybitSocketClientContractStreams ContractPrivate { get; }
+        /// <summary>
+        /// V5 Spot streams
+        /// </summary>
+        public IBybitSocketClientSpotStreams V5SpotStreams { get; }
+        /// <summary>
+        /// V5 Linear streams
+        /// </summary>
+        public IBybitSocketClientLinearStreams V5LinearStreams { get; }
+        /// <summary>
+        /// V5 Option streams
+        /// </summary>
+        public IBybitSocketClientOptionStreams V5OptionsStreams { get; }
+        /// <summary>
+        /// V5 Private streams
+        /// </summary>
+        public IBybitSocketClientPrivateStreams V5PrivateStreams { get; }
+
+        /// <summary>
+        /// Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.
+        /// </summary>
+        /// <param name="credentials">The credentials to set</param>
+        void SetApiCredentials(ApiCredentials credentials);
     }
 }

@@ -156,7 +156,7 @@ namespace Bybit.Net.Clients.SpotApi.v1
             parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.ClientOptions.ReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            return await _baseClient.SendRequestAsync<IEnumerable<BybitSpotUserTrade>>(_baseClient.GetUrl("spot/v1/myTrades"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<IEnumerable<BybitSpotUserTradeV1>>(_baseClient.GetUrl("spot/v1/myTrades"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion

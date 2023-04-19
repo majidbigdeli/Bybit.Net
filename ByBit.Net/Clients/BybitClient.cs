@@ -17,6 +17,7 @@ using Bybit.Net.Clients.SpotApi.v3;
 using Bybit.Net.Interfaces.Clients.SpotApi.v3;
 using Bybit.Net.Interfaces.Clients.DerivativesApi;
 using Bybit.Net.Clients.DerivativesApi;
+using CryptoExchange.Net.Authentication;
 
 namespace Bybit.Net.Clients
 {
@@ -39,6 +40,8 @@ namespace Bybit.Net.Clients
         public IBybitClientCopyTradingApi CopyTradingApi { get; }
         /// <inheritdoc />
         public IBybitClientDerivativesApi DerivativesApi { get; }
+        /// <inheritdoc />
+        public Interfaces.Clients.V5.IBybitClientApi V5Api { get; }
 
         #region constructor/destructor
         /// <summary>
@@ -62,6 +65,7 @@ namespace Bybit.Net.Clients
             GeneralApi = AddApiClient(new BybitClientGeneralApi(log, this, options));
             CopyTradingApi = AddApiClient(new BybitClientCopyTradingApi(log, options));
             DerivativesApi = AddApiClient(new BybitClientDerivativesApi(log, options));
+            V5Api = AddApiClient(new V5.BybitClientApi(log, options));
         }
         #endregion
 
@@ -72,6 +76,20 @@ namespace Bybit.Net.Clients
         public static void SetDefaultOptions(BybitClientOptions options)
         {
             BybitClientOptions.Default = options;
+        }
+
+        /// <inheritdoc />
+        public void SetApiCredentials(ApiCredentials credentials)
+        {
+            InversePerpetualApi.SetApiCredentials(credentials);
+            InverseFuturesApi.SetApiCredentials(credentials);
+            UsdPerpetualApi.SetApiCredentials(credentials);
+            SpotApiV1.SetApiCredentials(credentials);
+            SpotApiV3.SetApiCredentials(credentials);
+            GeneralApi.SetApiCredentials(credentials);
+            CopyTradingApi.SetApiCredentials(credentials);
+            DerivativesApi.SetApiCredentials(credentials);
+            V5Api.SetApiCredentials(credentials);
         }
     }
 }
