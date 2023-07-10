@@ -10,6 +10,9 @@ has_children: true
 *Copy trading API endpoints*  
 **[IBybitClientCopyTradingApi](CopyTradingApi/IBybitClientCopyTradingApi.html) CopyTradingApi { get; }**  
 ***
+*Derivatives API endpoints*  
+**[IBybitClientDerivativesApi](DerivativesApi/IBybitClientDerivativesApi.html) DerivativesApi { get; }**  
+***
 *General API endpoints*  
 **[IBybitClientGeneralApi](GeneralApi/IBybitClientGeneralApi.html) GeneralApi { get; }**  
 ***
@@ -19,6 +22,9 @@ has_children: true
 *Inverse perpetual API endpoints*  
 **[IBybitClientInversePerpetualApi](InversePerpetualApi/IBybitClientInversePerpetualApi.html) InversePerpetualApi { get; }**  
 ***
+*Set the API credentials for this client. All Api clients in this client will use the new credentials, regardless of earlier set options.*  
+**void SetApiCredentials(ApiCredentials credentials);**  
+***
 *Spot API endpoints (v1)*  
 **[IBybitClientSpotApiV1](IBybitClientSpotApiV1.html) SpotApiV1 { get; }**  
 ***
@@ -27,3 +33,6 @@ has_children: true
 ***
 *USD perpetual API endpoints*  
 **[IBybitClientUsdPerpetualApi](UsdPerpetualApi/IBybitClientUsdPerpetualApi.html) UsdPerpetualApi { get; }**  
+***
+*V5 API endpoints*  
+**V5.IBybitClientApi V5Api { get; }**  

@@ -6,13 +6,8 @@ namespace Bybit.Net.Interfaces.Clients.InversePerpetualApi
     /// <summary>
     /// Bybit inverse perpetual API endpoints
     /// </summary>
-    public interface IBybitClientInversePerpetualApi : IDisposable
+    public interface IBybitClientInversePerpetualApi : IRestApiClient, IDisposable
     {
-        /// <summary>
-        /// The factory for creating requests. Used for unit testing
-        /// </summary>
-        IRequestFactory RequestFactory { get; set; }
-
         /// <summary>
         /// Endpoints related to account settings, info or actions
         /// </summary>
