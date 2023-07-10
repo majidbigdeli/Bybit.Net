@@ -75,7 +75,7 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Delivery fee rate
         /// </summary>
-        public decimal DeliveryFeeRate { get; set; }
+        public decimal? DeliveryFeeRate { get; set; }
         /// <summary>
         /// Delivery time
         /// </summary>
@@ -84,15 +84,15 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Open interest
         /// </summary>
-        public decimal OpenInterest { get; set; }
+        public decimal? OpenInterest { get; set; }
         /// <summary>
         /// Open interest value
         /// </summary>
-        public decimal OpenInterestValue { get; set; }
+        public decimal? OpenInterestValue { get; set; }
         /// <summary>
         /// Funding rate
         /// </summary>
-        public decimal FundingRate { get; set; }
+        public decimal? FundingRate { get; set; }
         /// <summary>
         /// Next funding time
         /// </summary>
@@ -111,11 +111,11 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Basis rate
         /// </summary>
-        public decimal BasisRate { get; set; }
+        public decimal? BasisRate { get; set; }
         /// <summary>
         /// Basis
         /// </summary>
-        public decimal Basis { get; set; }
+        public decimal? Basis { get; set; }
         /// <summary>
         /// Predicted delivery price
         /// </summary>

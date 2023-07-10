@@ -28,6 +28,38 @@ Alternatively, sponsor me on Github using [Github Sponsors](https://github.com/s
 A Discord server is available [here](https://discord.gg/MSpeEtSY8t). Feel free to join for discussion and/or questions around the CryptoExchange.Net and implementation libraries.
 
 ## Release notes
+* Version 3.0.0 - 25 Jun 2023
+    * Updated CryptoExchange.Net to version 6.0.0
+    * Renamed BybitClient to BybitRestClient
+    * Renamed **Streams to **Api on the BybitSocketClient
+    * Updated endpoints to consistently use a base url without any path as basis to make switching environments/base urls clearer
+    * Added IBybitOrderBookFactory and implementation for creating order books
+    * Updated dependency injection register method (AddBybit)
+    * Updated V5 socket API kline update topic to include the interval
+    * Added CopyTrading SetTradingStopAsync endpoint
+    * Fixed V5 GetMarginAccountInfoAsync endpoint
+
+* Version 2.0.5 - 19 Jun 2023
+    * Fixed V5 GetLinearInverseTickersAsync response model nullability
+    * Added missing parameters V5 SetTradingStopAsync
+    * Fixed incorrect V5 GetOrderAsync check
+
+* Version 2.0.4 - 02 Jun 2023
+    * Fixed deserialization error on V5 Inverse ticker model
+    * Fixed V5 GetOrder incorrect validation check
+
+* Version 2.0.3 - 22 May 2023
+    * Fixed category parameter not being send on V5 GetFreeRateAsync
+    * Fixed CreateTime deserialization on Spot V3 order model
+
+* Version 2.0.2 - 14 May 2023
+    * Fixed V5 GetTransactionHistory response model
+    * Fixed V5 Account Withdraw incorrect parameter name
+    * Fixed V5 Trading PlaceOrder incorrect position parameter
+
+* Version 2.0.1 - 25 Apr 2023
+    * Fixed V5.Account.CreateInternalTransfer endpoint
+
 * Version 2.0.0 - 14 Apr 2023
     * Added V5 API implementation
     * Fixed contract PlaceOrder parameters
