@@ -56,8 +56,9 @@ namespace Bybit.Net.Clients.SpotApi
                 return new CallResult<bool>(new NoApiCredentialsError());
 
             var expireTime = DateTimeConverter.ConvertToMilliseconds(DateTime.UtcNow.AddSeconds(30))!;
-            var key = ((BybitAuthenticationProvider)socketConnection.ApiClient.AuthenticationProvider).GetApiKey();
-            var sign = socketConnection.ApiClient.AuthenticationProvider.Sign($"GET/realtime{expireTime}");
+            var bybitAuthProvider = (BybitAuthenticationProvider)socketConnection.ApiClient.AuthenticationProvider;
+            var key = bybitAuthProvider.GetApiKey();
+            var sign = bybitAuthProvider.Sign($"GET/realtime{expireTime}");
 
             var authRequest = new BybitRequestMessage()
             {
@@ -72,7 +73,7 @@ namespace Bybit.Net.Clients.SpotApi
 
             var result = false;
             var error = "unspecified error";
-            await socketConnection.SendAndWaitAsync(authRequest, ClientOptions.RequestTimeout, null, data =>
+            await socketConnection.SendAndWaitAsync(authRequest, ClientOptions.RequestTimeout, null, 1, data =>
             {
                 if (data.Type != JTokenType.Object)
                     return false;
@@ -192,7 +193,7 @@ namespace Bybit.Net.Clients.SpotApi
             }
 
             var result = false;
-            await connection.SendAndWaitAsync(message, ClientOptions.RequestTimeout, null, data =>
+            await connection.SendAndWaitAsync(message, ClientOptions.RequestTimeout, null, 1, data =>
             {
                 if (!isCheckable)
                 {

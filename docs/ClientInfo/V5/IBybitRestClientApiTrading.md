@@ -40,6 +40,32 @@ Task<WebCallResult<BybitResponse<BybitOrderId>>> CancelAllOrderAsync(Category ca
 
 ***
 
+## CancelMultipleOrdersAsync  
+
+[https://bybit-exchange.github.io/docs/v5/order/batch-cancel](https://bybit-exchange.github.io/docs/v5/order/batch-cancel)  
+<p>
+
+*Cancel multiple orders*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.CancelMultipleOrdersAsync(/* parameters */);  
+```  
+
+```csharp  
+Task<WebCallResult<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>> CancelMultipleOrdersAsync(Category category, IEnumerable<BybitCancelOrderRequest> orderRequests, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|category|The category|
+|orderRequests|Request data|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
 ## CancelOrderAsync  
 
 [https://bybit-exchange.github.io/docs/v5/order/cancel-order](https://bybit-exchange.github.io/docs/v5/order/cancel-order)  
@@ -63,6 +89,32 @@ Task<WebCallResult<BybitOrderId>> CancelOrderAsync(Category category, string sym
 |_[Optional]_ orderId|Cancel by order id|
 |_[Optional]_ clientOrderId|Cancel by client order id|
 |_[Optional]_ orderFilter|Order filter|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
+## EditMultipleOrdersAsync  
+
+[https://bybit-exchange.github.io/docs/v5/order/batch-amend](https://bybit-exchange.github.io/docs/v5/order/batch-amend)  
+<p>
+
+*Edit multiple orders*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.EditMultipleOrdersAsync(/* parameters */);  
+```  
+
+```csharp  
+Task<WebCallResult<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>> EditMultipleOrdersAsync(Category category, IEnumerable<BybitEditOrderRequest> orderRequests, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|category|The category|
+|orderRequests|Request data|
 |_[Optional]_ ct|Cancellation token|
 
 </p>
@@ -220,6 +272,37 @@ Task<WebCallResult<BybitResponse<BybitDeliveryRecord>>> GetDeliveryHistoryAsync(
 
 ***
 
+## GetLeverageTokenOrderHistoryAsync  
+
+[https://bybit-exchange.github.io/docs/v5/lt/order-record](https://bybit-exchange.github.io/docs/v5/lt/order-record)  
+<p>
+
+*Get leverage token order history*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.GetLeverageTokenOrderHistoryAsync();  
+```  
+
+```csharp  
+Task<WebCallResult<IEnumerable<BybitLeverageTokenHistory>>> GetLeverageTokenOrderHistoryAsync(string? token = default, string? orderId = default, string? clientOrderId = default, DateTime? startTime = default, DateTime? endTime = default, int? limit = default, LeverageTokenRecordType? type = default, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|_[Optional]_ token|Filter by token|
+|_[Optional]_ orderId|Filter by order id|
+|_[Optional]_ clientOrderId|Filter by client order id|
+|_[Optional]_ startTime|Filter by start time|
+|_[Optional]_ endTime|Filter by end time|
+|_[Optional]_ limit|Max number of results|
+|_[Optional]_ type|Filter by type or record|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
 ## GetOrderHistoryAsync  
 
 [https://bybit-exchange.github.io/docs/v5/order/order-list](https://bybit-exchange.github.io/docs/v5/order/order-list)  
@@ -233,7 +316,7 @@ var result = await client.V5.ApiTrading.GetOrderHistoryAsync(/* parameters */);
 ```  
 
 ```csharp  
-Task<WebCallResult<BybitResponse<BybitOrder>>> GetOrderHistoryAsync(Category category, string? symbol = default, string? baseAsset = default, string? orderId = default, string? clientOrderId = default, Enums.V5.OrderStatus? status = default, OrderFilter? orderFilter = default, int? limit = default, string? cursor = default, CancellationToken ct = default);  
+Task<WebCallResult<BybitResponse<BybitOrder>>> GetOrderHistoryAsync(Category category, string? symbol = default, string? baseAsset = default, string? orderId = default, string? clientOrderId = default, Enums.V5.OrderStatus? status = default, OrderFilter? orderFilter = default, DateTime? startTime = default, DateTime? endTime = default, int? limit = default, string? cursor = default, CancellationToken ct = default);  
 ```  
 
 |Parameter|Description|
@@ -245,6 +328,8 @@ Task<WebCallResult<BybitResponse<BybitOrder>>> GetOrderHistoryAsync(Category cat
 |_[Optional]_ clientOrderId|Filter by client order id|
 |_[Optional]_ status|Filter by status|
 |_[Optional]_ orderFilter|Order filter|
+|_[Optional]_ startTime|Filter by start time|
+|_[Optional]_ endTime|Filter by end time|
 |_[Optional]_ limit|Number of results per page|
 |_[Optional]_ cursor|Pagination cursor|
 |_[Optional]_ ct|Cancellation token|
@@ -379,6 +464,32 @@ Task<WebCallResult<BybitResponse<BybitUserTrade>>> GetUserTradesAsync(Category c
 
 ***
 
+## PlaceMultipleOrdersAsync  
+
+[https://bybit-exchange.github.io/docs/v5/order/batch-place](https://bybit-exchange.github.io/docs/v5/order/batch-place)  
+<p>
+
+*Place multiple orders*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.PlaceMultipleOrdersAsync(/* parameters */);  
+```  
+
+```csharp  
+Task<WebCallResult<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>> PlaceMultipleOrdersAsync(Category category, IEnumerable<BybitPlaceOrderRequest> orderRequests, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|category|The category|
+|orderRequests|Request data|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
 ## PlaceOrderAsync  
 
 [https://bybit-exchange.github.io/docs/v5/order/create-order](https://bybit-exchange.github.io/docs/v5/order/create-order)  
@@ -392,7 +503,7 @@ var result = await client.V5.ApiTrading.PlaceOrderAsync(/* parameters */);
 ```  
 
 ```csharp  
-Task<WebCallResult<BybitOrderId>> PlaceOrderAsync(Category category, string symbol, OrderSide side, NewOrderType type, decimal quantity, decimal? price = default, bool? isLeverage = default, TriggerDirection? triggerDirection = default, OrderFilter? orderFilter = default, decimal? triggerPrice = default, TriggerType? triggerBy = default, decimal? orderIv = default, TimeInForce? timeInForce = default, Enums.V5.PositionIdx? positionIdx = default, string? clientOrderId = default, decimal? takeProfit = default, decimal? stopLoss = default, TriggerType? takeProfitTriggerBy = default, TriggerType? stopLossTriggerBy = default, bool? reduceOnly = default, bool? closeOnTrigger = default, bool? marketMakerProtection = default, CancellationToken ct = default);  
+Task<WebCallResult<BybitOrderId>> PlaceOrderAsync(Category category, string symbol, OrderSide side, NewOrderType type, decimal quantity, decimal? price = default, bool? isLeverage = default, TriggerDirection? triggerDirection = default, OrderFilter? orderFilter = default, decimal? triggerPrice = default, TriggerType? triggerBy = default, decimal? orderIv = default, TimeInForce? timeInForce = default, PositionIdx? positionIdx = default, string? clientOrderId = default, OrderType? takeProfitOrderType = default, decimal? takeProfit = default, decimal? takeProfitLimitPrice = default, OrderType? stopLossOrderType = default, decimal? stopLoss = default, decimal? stopLossLimitPrice = default, TriggerType? takeProfitTriggerBy = default, TriggerType? stopLossTriggerBy = default, bool? reduceOnly = default, bool? closeOnTrigger = default, bool? marketMakerProtection = default, StopLossTakeProfitMode? stopLossTakeProfitMode = default, CancellationToken ct = default);  
 ```  
 
 |Parameter|Description|
@@ -412,13 +523,72 @@ Task<WebCallResult<BybitOrderId>> PlaceOrderAsync(Category category, string symb
 |_[Optional]_ timeInForce|Time in force|
 |_[Optional]_ positionIdx|Position idx|
 |_[Optional]_ clientOrderId|Client order id|
+|_[Optional]_ takeProfitOrderType||
 |_[Optional]_ takeProfit|Take profit price|
+|_[Optional]_ takeProfitLimitPrice||
+|_[Optional]_ stopLossOrderType||
 |_[Optional]_ stopLoss|Stop loss price|
+|_[Optional]_ stopLossLimitPrice||
 |_[Optional]_ takeProfitTriggerBy|Take profit trigger|
 |_[Optional]_ stopLossTriggerBy|Stop loss trigger|
 |_[Optional]_ reduceOnly|Is reduce only|
 |_[Optional]_ closeOnTrigger|Close on trigger|
 |_[Optional]_ marketMakerProtection|Market maker protection|
+|_[Optional]_ stopLossTakeProfitMode|StopLoss / TakeProfit mode|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
+## PurchaseLeverageTokenAsync  
+
+[https://bybit-exchange.github.io/docs/v5/lt/purchase](https://bybit-exchange.github.io/docs/v5/lt/purchase)  
+<p>
+
+*Purchase a leverage token*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.PurchaseLeverageTokenAsync(/* parameters */);  
+```  
+
+```csharp  
+Task<WebCallResult<BybitLeverageTokenRecord>> PurchaseLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = default, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|token|Token id|
+|quantity|Quantity|
+|_[Optional]_ clientOrderId|Custom order id|
+|_[Optional]_ ct|Cancellation token|
+
+</p>
+
+***
+
+## RedeemLeverageTokenAsync  
+
+[https://bybit-exchange.github.io/docs/v5/lt/redeem](https://bybit-exchange.github.io/docs/v5/lt/redeem)  
+<p>
+
+*Redeem a leverage token*  
+
+```csharp  
+var client = new BybitRestClient();  
+var result = await client.V5.ApiTrading.RedeemLeverageTokenAsync(/* parameters */);  
+```  
+
+```csharp  
+Task<WebCallResult<BybitLeverageTokenRecord>> RedeemLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = default, CancellationToken ct = default);  
+```  
+
+|Parameter|Description|
+|---|---|
+|token|Token id|
+|quantity|Quantity|
+|_[Optional]_ clientOrderId|Custom order id|
 |_[Optional]_ ct|Cancellation token|
 
 </p>

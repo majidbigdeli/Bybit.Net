@@ -8,7 +8,7 @@ namespace Bybit.Net.Objects.Models.V5
     /// <summary>
     /// Asset balances
     /// </summary>
-    public class BybitAssetBalances
+    public class BybitAllAssetBalances
     {
         /// <summary>
         /// Account type
@@ -26,6 +26,26 @@ namespace Bybit.Net.Objects.Models.V5
     }
 
     /// <summary>
+    /// Asset balances
+    /// </summary>
+    public class BybitSingleAssetBalance
+    {
+        /// <summary>
+        /// Account type
+        /// </summary>
+        public AccountType AccountType { get; set; }
+        /// <summary>
+        /// Member id
+        /// </summary>
+        public string? MemberId { get; set; }
+        /// <summary>
+        /// Balances
+        /// </summary>
+        [JsonProperty("balance")]
+        public BybitAssetAccountBalance Balances { get; set; } = null!;
+    }
+
+    /// <summary>
     /// Account asset balance
     /// </summary>
     public class BybitAssetAccountBalance
@@ -38,7 +58,7 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Wallet balance
         /// </summary>
-        public decimal WalletBalance { get; set; }
+        public decimal? WalletBalance { get; set; }
         /// <summary>
         /// Transfer balance
         /// </summary>

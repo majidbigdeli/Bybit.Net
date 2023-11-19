@@ -3,6 +3,7 @@ using Bybit.Net.Enums.V5;
 using Bybit.Net.Objects.Models.V5;
 using CryptoExchange.Net.Objects;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,7 +69,7 @@ namespace Bybit.Net.Interfaces.Clients.V5
         /// <param name="withBonus">Include bonus</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<BybitAssetBalances>> GetAllAssetBalancesAsync(AccountType accountType, string? memberId = null, string? asset = null, bool? withBonus = null, CancellationToken ct = default);
+        Task<WebCallResult<BybitAllAssetBalances>> GetAllAssetBalancesAsync(AccountType accountType, string? memberId = null, string? asset = null, bool? withBonus = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get allowed deposit asset info
@@ -91,6 +92,58 @@ namespace Bybit.Net.Interfaces.Clients.V5
         Task<WebCallResult<BybitApiKeyInfo>> GetApiKeyInfoAsync(CancellationToken ct = default);
 
         /// <summary>
+        /// Edit master API key settings
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/user/modify-master-apikey" /></para>
+        /// </summary>
+        /// <param name="readOnly">Readonly</param>
+        /// <param name="ipRestrictions">IP restrictions, comma seperated</param>
+        /// <param name="permissionContractTradeOrder">Has contract order permission</param>
+        /// <param name="permissionContractTradePosition">Has contract position permission</param>
+        /// <param name="permissionSpotTrade">Has spot trade permission</param>
+        /// <param name="permissionWalletTransfer">Has wallet transfer permission</param>
+        /// <param name="permissionWalletSubAccountTransfer">Has permission wallet subaccount transfer permission</param>
+        /// <param name="permissionOptionsTrade">Has option trade permission</param>
+        /// <param name="permissionExchangeHistory">Has exchange history permission</param>
+        /// <param name="permissionCopyTrading">Has copy trade permission</param>
+        /// <param name="permissionBlockTrading">Has block trade permission</param>
+        /// <param name="permissionNftProductList">Has NFT product list permission</param>
+        /// <param name="permissionAffiliate">Has affiliate permission</param>
+        /// <param name="ct">Cancelation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<BybitApiKeyInfo>> EditApiKeyAsync(
+            bool? readOnly = null,
+            string? ipRestrictions = null,
+            bool? permissionContractTradeOrder = null,
+            bool? permissionContractTradePosition = null,
+            bool? permissionSpotTrade = null,
+            bool? permissionWalletTransfer = null,
+            bool? permissionWalletSubAccountTransfer = null,
+            bool? permissionOptionsTrade = null,
+            bool? permissionCopyTrading = null,
+            bool? permissionBlockTrading = null,
+            bool? permissionExchangeHistory = null,
+            bool? permissionNftProductList = null,
+            bool? permissionAffiliate = null,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Delete the current API Key
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/user/rm-master-apikey" /></para>
+        /// </summary>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        Task<WebCallResult> DeleteApiKeyAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Get account types
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/user/wallet-type" /></para>
+        /// </summary>
+        /// <param name="subAccountIds">Master id can request subaccount info</param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        Task<WebCallResult<IEnumerable<BybitAccountTypeInfo>>> GetAccountTypesAsync(IEnumerable<string>? subAccountIds = null, CancellationToken ct = default);
+
+        /// <summary>
         /// Get asset balance
         /// <para><a href="https://bybit-exchange.github.io/docs/v5/asset/account-coin-balance" /></para>
         /// </summary>
@@ -100,7 +153,7 @@ namespace Bybit.Net.Interfaces.Clients.V5
         /// <param name="withBonus">Include bonus</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
-        Task<WebCallResult<BybitAssetBalances>> GetAssetBalanceAsync(AccountType accountType, string asset, string? memberId = null, bool? withBonus = null, CancellationToken ct = default);
+        Task<WebCallResult<BybitSingleAssetBalance>> GetAssetBalanceAsync(AccountType accountType, string asset, string? memberId = null, bool? withBonus = null, CancellationToken ct = default);
 
         /// <summary>
         /// Get current account greek info
@@ -381,5 +434,58 @@ namespace Bybit.Net.Interfaces.Clients.V5
         /// <param name="ct">Cancellation token</param>
         /// <returns></returns>
         Task<WebCallResult<BybitId>> WithdrawAsync(string asset, string network, string toAddress, decimal quantity, string? tag = null, bool? forceNetwork = null, AccountType? accountType = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Manually add or reduce margin for isolated margin position
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/position/manual-add-margin" /></para>
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="symbol">Symbol</param>
+        /// <param name="margin">Margin. Positive for adding, negative for reducing</param>
+        /// <param name="positionIdx">Position idx</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<BybitPosition>> AddOrReduceMarginAsync(
+            Category category,
+            string symbol,
+            decimal margin,
+            PositionIdx? positionIdx = null,
+            CancellationToken ct = default);
+
+        /// <summary>
+        /// Set the user's maximum leverage in spot cross margin
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-leverage" /></para>
+        /// </summary>
+        /// <param name="leverage">New leverage</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult> SetSpotMarginLeverageAsync(decimal leverage, CancellationToken ct = default);
+
+        /// <summary>
+        /// Query the Spot margin status and leverage of Unified account
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status" /></para>
+        /// </summary>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<BybitSpotMarginLeverageStatus>> GetSpotMarginStatusAndLeverageAsync(CancellationToken ct = default);
+
+        /// <summary>
+        /// Turn on / off spot margin trade
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status" /></para>
+        /// </summary>
+        /// <param name="spotMarginMode">True to enable, false to disable</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<BybitSpotMarginStatus>> SetSpotMarginTradeModeAsync(bool spotMarginMode, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get spot margin data
+        /// <para><a href="https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin" /></para>
+        /// </summary>
+        /// <param name="asset">Filter by asset</param>
+        /// <param name="vipLevel">Filter by VIP level</param>
+        /// <param name="ct">Cancellation token</param>
+        /// <returns></returns>
+        Task<WebCallResult<IEnumerable<BybitSpotMarginVipMarginList>>> GetSpotMarginDataAsync(string? asset = null, string? vipLevel = null, CancellationToken ct = default);
     }
 }

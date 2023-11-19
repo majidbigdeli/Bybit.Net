@@ -25,6 +25,8 @@ namespace Bybit.Net.UnitTests
             x.UsdPerpetualOptions.OutputOriginalData = true;
             x.DerivativesOptions.RateLimiters = new List<IRateLimiter>();
             x.DerivativesOptions.OutputOriginalData = true;
+            x.V5Options.RateLimiters = new List<IRateLimiter>();
+            x.V5Options.OutputOriginalData = true;
         },
             System.Net.HttpStatusCode.OK));
 
@@ -343,6 +345,49 @@ namespace Bybit.Net.UnitTests
                 },
                 ignoreProperties: new Dictionary<string, List<string>>
                 {
+                },
+                useNestedJsonPropertyForAllCompare: new List<string> { "result" }
+                );
+        }
+
+        [Test]
+        public async Task ValidateV5TradingCalls()
+        {
+            await _comparer.ProcessSubject("V5/Trading", c => c.V5Api.Trading,
+                useNestedJsonPropertyForCompare: new Dictionary<string, string>
+                {
+                    { "GetLeverageTokenOrderHistoryAsync", "list" }
+                },
+                ignoreProperties: new Dictionary<string, List<string>>
+                {
+                },
+                useNestedJsonPropertyForAllCompare: new List<string> { "result" }
+                );
+        }
+
+        [Test]
+        public async Task ValidateV5AccountCalls()
+        {
+            await _comparer.ProcessSubject("V5/Account", c => c.V5Api.Account,
+                useNestedJsonPropertyForCompare: new Dictionary<string, string>
+                {
+                    { "GetAccountTypesAsync", "accounts" }
+                },
+                ignoreProperties: new Dictionary<string, List<string>>
+                {
+                    { "AddOrReduceMarginAsync", new List<string>{ "category" } }
+                },
+                useNestedJsonPropertyForAllCompare: new List<string> { "result" }
+                );
+        }
+
+        [Test]
+        public async Task ValidateV5SubAccountCalls()
+        {
+            await _comparer.ProcessSubject("V5/SubAccount", c => c.V5Api.SubAccount,
+                useNestedJsonPropertyForCompare: new Dictionary<string, string>
+                {
+                    { "GetSubAccountsAsync", "subMembers" }
                 },
                 useNestedJsonPropertyForAllCompare: new List<string> { "result" }
                 );

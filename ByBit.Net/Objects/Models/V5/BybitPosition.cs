@@ -33,7 +33,7 @@ namespace Bybit.Net.Objects.Models.V5
         /// Position side
         /// </summary>
         [JsonConverter(typeof(EnumConverter))]
-        public PositionSide Side { get; set; }
+        public PositionSide? Side { get; set; }
         /// <summary>
         /// Position size
         /// </summary>
@@ -43,12 +43,20 @@ namespace Bybit.Net.Objects.Models.V5
         /// Average entry price
         /// </summary>
         [JsonProperty("avgPrice")]
-        public decimal AveragePrice { get; set; }
+        public decimal? AveragePrice { get; set; }
+
+        [JsonProperty("entryPrice")]
+        private decimal? EntryPrice
+        {
+            get => AveragePrice;
+            set => AveragePrice = value;
+        }
+
         /// <summary>
         /// Position value
         /// </summary>
         [JsonProperty("positionValue")]
-        public decimal PositionValue { get; set; }
+        public decimal? PositionValue { get; set; }
         /// <summary>
         /// Trade mode
         /// </summary>
@@ -66,12 +74,12 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Mark price
         /// </summary>
-        public decimal MarkPrice { get; set; }
+        public decimal? MarkPrice { get; set; }
         /// <summary>
         /// Liquidation price
         /// </summary>
         [JsonProperty("liqPrice")]
-        public decimal LiquidationPrice { get; set; }
+        public decimal? LiquidationPrice { get; set; }
         /// <summary>
         /// Bankruptcy price
         /// </summary>
@@ -131,5 +139,15 @@ namespace Bybit.Net.Objects.Models.V5
         [JsonProperty("updatedTime")]
         [JsonConverter(typeof(DateTimeConverter))]
         public DateTime UpdateTime { get; set; }
+        /// <summary>
+        /// Whether to add margin automatically
+        /// </summary>
+        [JsonProperty("autoAddMargin")]
+        public bool AutoAddMargin { get; set; }
+        /// <summary>
+        /// Position margin
+        /// </summary>
+        [JsonProperty("positionBalance")]
+        public decimal? PositionBalance { get; set; }
     }
 }
