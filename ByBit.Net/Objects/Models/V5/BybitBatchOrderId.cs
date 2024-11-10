@@ -8,7 +8,7 @@ namespace Bybit.Net.Objects.Models.V5
     /// <summary>
     /// Order ids
     /// </summary>
-    public class BybitBatchOrderId
+    public record BybitBatchOrderId
     {
         /// <summary>
         /// Category
@@ -26,6 +26,7 @@ namespace Bybit.Net.Objects.Models.V5
         /// <summary>
         /// Client order id
         /// </summary>
+        [JsonProperty("orderLinkId")]
         public string? ClientOrderId { get; set; }
         /// <summary>
         /// Creation time

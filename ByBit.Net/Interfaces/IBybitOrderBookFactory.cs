@@ -1,6 +1,7 @@
 ﻿using Bybit.Net.Enums;
 using Bybit.Net.Objects.Options;
 using CryptoExchange.Net.Interfaces;
+using CryptoExchange.Net.SharedApis;
 using System;
 
 namespace Bybit.Net.Interfaces
@@ -10,6 +11,29 @@ namespace Bybit.Net.Interfaces
     /// </summary>
     public interface IBybitOrderBookFactory
     {
+        /// <summary>
+        /// Spot order book factory methods
+        /// </summary>
+        public IOrderBookFactory<BybitOrderBookOptions> Spot { get; }
+
+        /// <summary>
+        /// Options order book factory methods
+        /// </summary>
+        public IOrderBookFactory<BybitOrderBookOptions> Options { get; }
+
+        /// <summary>
+        /// Linear/Inverse order book factory methods
+        /// </summary>
+        public IOrderBookFactory<BybitOrderBookOptions> LinearInverse { get; }
+
+        /// <summary>
+        /// Create a SymbolOrderBook for the symbol
+        /// </summary>
+        /// <param name="symbol">The symbol</param>
+        /// <param name="options">Book options</param>
+        /// <returns></returns>
+        ISymbolOrderBook Create(SharedSymbol symbol, Action<BybitOrderBookOptions>? options = null);
+
         /// <summary>
         /// Create a SymbolOrderBook specifying the category
         /// </summary>

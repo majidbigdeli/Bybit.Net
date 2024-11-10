@@ -1,9 +1,11 @@
-﻿namespace Bybit.Net.Objects.Models.V5
+﻿using Newtonsoft.Json;
+
+namespace Bybit.Net.Objects.Models.V5
 {
     /// <summary>
     /// Order ids
     /// </summary>
-    public class BybitOrderId
+    public record BybitOrderId
     {
         /// <summary>
         /// The order id
@@ -12,6 +14,7 @@
         /// <summary>
         /// Client order id
         /// </summary>
+        [JsonProperty("orderLinkId")]
         public string? ClientOrderId { get; set; }
     }
 }

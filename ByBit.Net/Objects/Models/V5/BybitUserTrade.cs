@@ -8,7 +8,7 @@ namespace Bybit.Net.Objects.Models.V5
     /// <summary>
     /// User trade info
     /// </summary>
-    public class BybitUserTrade
+    public record BybitUserTrade
     {
         /// <summary>
         /// Symbol
@@ -56,7 +56,7 @@ namespace Bybit.Net.Objects.Models.V5
         /// Fee paid
         /// </summary>
         [JsonProperty("execFee")]
-        public decimal Fee { get; set; }
+        public decimal? Fee { get; set; }
         /// <summary>
         /// Trade id
         /// </summary>
@@ -94,10 +94,14 @@ namespace Bybit.Net.Objects.Models.V5
         /// </summary>
         public bool IsMaker { get; set; }
         /// <summary>
-        /// Is leverage
+        /// Whether to borrow. Unified spot only
         /// </summary>
-        [JsonConverter(typeof(EnumConverter))]
         public bool? IsLeverage { get; set; }
+        /// <summary>
+        /// Spot trading fee asset
+        /// </summary>
+        [JsonProperty("feeCurrency")]
+        public string? FeeAsset { get; set; }
         /// <summary>
         /// Fee rate
         /// </summary>
@@ -131,5 +135,10 @@ namespace Bybit.Net.Objects.Models.V5
         /// </summary>
         [JsonProperty("closedSize")]
         public decimal? ClosedQuantity { get; set; }
+        /// <summary>
+        /// Cross sequence, used to associate each fill and each position update
+        /// </summary>
+        [JsonProperty("seq")]
+        public long? Sequence { get; set; }
     }
 }

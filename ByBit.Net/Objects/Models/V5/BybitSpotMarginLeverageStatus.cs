@@ -1,5 +1,4 @@
-﻿using Bybit.Net.Converters;
-using CryptoExchange.Net.Converters;
+﻿using CryptoExchange.Net.Converters;
 using Newtonsoft.Json;
 
 namespace Bybit.Net.Objects.Models.V5
@@ -7,7 +6,7 @@ namespace Bybit.Net.Objects.Models.V5
     /// <summary>
     /// Marging status and leverage info
     /// </summary>
-    public class BybitSpotMarginLeverageStatus
+    public record BybitSpotMarginLeverageStatus
     {
         /// <summary>
         /// The leverage
@@ -19,5 +18,10 @@ namespace Bybit.Net.Objects.Models.V5
         /// </summary>
         [JsonProperty("spotMarginMode"), JsonConverter(typeof(BoolConverter))]
         public bool SpotMarginMode { get; set; }
+        /// <summary>
+        /// Actual leverage ratio
+        /// </summary>
+        [JsonProperty("effectiveLeverage")]
+        public decimal? EffectiveLeverage { get; set; }
     }
 }

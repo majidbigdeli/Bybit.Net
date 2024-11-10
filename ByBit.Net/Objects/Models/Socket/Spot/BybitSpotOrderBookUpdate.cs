@@ -9,7 +9,7 @@ namespace Bybit.Net.Objects.Models.Socket.Spot
     /// <summary>
     /// Order book update
     /// </summary>
-    public class BybitSpotOrderBookUpdate
+    public record BybitSpotOrderBookUpdate
     {
         /// <summary>
         /// Symbol
@@ -34,7 +34,7 @@ namespace Bybit.Net.Objects.Models.Socket.Spot
         public IEnumerable<BybitSpotOrderBookEntry> Bids { get; set; } = Array.Empty<BybitSpotOrderBookEntry>();
     }
 
-    public class ByBitDiffSpotOrderBookUpdate : BybitSpotOrderBookUpdate
+    public record ByBitDiffSpotOrderBookUpdate : BybitSpotOrderBookUpdate
     {
         [JsonProperty("v")]
         public string Version { get; set; }

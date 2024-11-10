@@ -17,7 +17,7 @@ using System.Linq;
 namespace Bybit.Net.Clients.V5
 {
     /// <inheritdoc />
-    public class BybitRestClientApiTrading : IBybitRestClientApiTrading
+    internal class BybitRestClientApiTrading : IBybitRestClientApiTrading
     {
         private readonly BybitRestClientApi _baseClient;
 
@@ -57,6 +57,8 @@ namespace Bybit.Net.Clients.V5
             bool? closeOnTrigger = null,
             bool? marketMakerProtection = null,
             StopLossTakeProfitMode? stopLossTakeProfitMode = null,
+            SelfMatchPreventionType? selfMatchPreventionType = null,
+            MarketUnit? marketUnit = null,
             CancellationToken ct = default
         )
         {
@@ -93,6 +95,8 @@ namespace Bybit.Net.Clients.V5
             parameters.AddOptionalParameter("slOrderType", EnumConverter.GetString(stopLossOrderType));
             parameters.AddOptionalParameter("tpLimitPrice", takeProfitLimitPrice?.ToString(CultureInfo.InvariantCulture));
             parameters.AddOptionalParameter("slLimitPrice", stopLossLimitPrice?.ToString(CultureInfo.InvariantCulture));
+            parameters.AddOptionalParameter("smpType", EnumConverter.GetString(selfMatchPreventionType));
+            parameters.AddOptionalParameter("marketUnit", EnumConverter.GetString(marketUnit));
 
             var result = await _baseClient.SendRequestAsync<BybitOrderId>(_baseClient.GetUrl("v5/order/create"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
             if (result)
@@ -135,11 +139,11 @@ namespace Bybit.Net.Clients.V5
             if (result.Data.ReturnCode != 0)
                 return result.AsError<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>(new ServerError(result.Data.ReturnCode, result.Data.ReturnMessage));
 
-            var resultList = new List<BybitBatchResult<BybitBatchOrderId>>();
+            var resultList = new List<BybitBatchResult<BybitBatchOrderId>>(); 
+            var resultItems = result.Data.Result.List.ToArray();
             int index = 0;
             foreach (var item in result.Data.ExtInfo.List)
-            {
-                var resultItems = result.Data.Result.List.ToArray();
+            {                
                 var resultItem = resultItems[index++];
                 resultList.Add(new BybitBatchResult<BybitBatchOrderId>
                 {
@@ -180,25 +184,31 @@ namespace Bybit.Net.Clients.V5
             decimal? stopLoss = null,
             TriggerType? takeProfitTriggerBy = null,
             TriggerType? stopLossTriggerBy = null,
+            StopLossTakeProfitMode? stopLossTakeProfitMode = null,
+            decimal? takeProfitLimitPrice = null,
+            decimal? stopLossLimitPrice = null,
             CancellationToken ct = default)
         {
-            var parameters = new Dictionary<string, object>()
+            var parameters = new ParameterCollection
             {
                 { "category", EnumConverter.GetString(category) },
                 { "symbol", symbol }
             };
 
-            parameters.AddOptionalParameter("qty", quantity?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("price", price?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("triggerPrice", triggerPrice?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("triggerBy", EnumConverter.GetString(triggerBy));
-            parameters.AddOptionalParameter("orderIv", orderIv?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("orderId", orderId);
-            parameters.AddOptionalParameter("orderLinkId", clientOrderId);
-            parameters.AddOptionalParameter("takeProfit", takeProfit?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("stopLoss", stopLoss?.ToString(CultureInfo.InvariantCulture));
-            parameters.AddOptionalParameter("tpTriggerBy", EnumConverter.GetString(takeProfitTriggerBy));
-            parameters.AddOptionalParameter("slTriggerBy", EnumConverter.GetString(stopLossTriggerBy));
+            parameters.AddOptionalString("qty", quantity);
+            parameters.AddOptionalString("price", price);
+            parameters.AddOptionalString("triggerPrice", triggerPrice);
+            parameters.AddOptionalEnum("triggerBy", triggerBy);
+            parameters.AddOptionalString("orderIv", orderIv);
+            parameters.AddOptional("orderId", orderId);
+            parameters.AddOptional("orderLinkId", clientOrderId);
+            parameters.AddOptionalString("takeProfit", takeProfit);
+            parameters.AddOptionalString("stopLoss", stopLoss);
+            parameters.AddOptionalEnum("tpTriggerBy", takeProfitTriggerBy);
+            parameters.AddOptionalEnum("slTriggerBy", stopLossTriggerBy);
+            parameters.AddOptionalEnum("tpslMode", stopLossTakeProfitMode);
+            parameters.AddOptionalString("tpLimitPrice", takeProfitLimitPrice);
+            parameters.AddOptionalString("slLimitPrice", stopLossLimitPrice);
 
             return await _baseClient.SendRequestAsync<BybitOrderId>(_baseClient.GetUrl("v5/order/amend"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
@@ -227,10 +237,10 @@ namespace Bybit.Net.Clients.V5
                 return result.AsError<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>(new ServerError(result.Data.ReturnCode, result.Data.ReturnMessage));
 
             var resultList = new List<BybitBatchResult<BybitBatchOrderId>>();
+            var resultItems = result.Data.Result.List.ToArray();
             int index = 0;
             foreach (var item in result.Data.ExtInfo.List)
             {
-                var resultItems = result.Data.Result.List.ToArray();
                 resultList.Add(new BybitBatchResult<BybitBatchOrderId>
                 {
                     Code = item.Code,
@@ -305,10 +315,10 @@ namespace Bybit.Net.Clients.V5
                 return result.AsError<IEnumerable<BybitBatchResult<BybitBatchOrderId>>>(new ServerError(result.Data.ReturnCode, result.Data.ReturnMessage));
 
             var resultList = new List<BybitBatchResult<BybitBatchOrderId>>();
+            var resultItems = result.Data.Result.List.ToArray(); 
             int index = 0;
             foreach (var item in result.Data.ExtInfo.List)
             {
-                var resultItems = result.Data.Result.List.ToArray();
                 var resultItem = resultItems[index++];
                 resultList.Add(new BybitBatchResult<BybitBatchOrderId>
                 {
@@ -335,7 +345,7 @@ namespace Bybit.Net.Clients.V5
         #region Get Open Orders
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitResponse<Objects.Models.V5.BybitOrder>>> GetOrdersAsync(
+        public async Task<WebCallResult<BybitResponse<BybitOrder>>> GetOrdersAsync(
             Category category,
             string? symbol = null,
             string? baseAsset = null,
@@ -380,6 +390,7 @@ namespace Bybit.Net.Clients.V5
             string? baseAsset = null,
             string? settleAsset = null,
             OrderFilter? orderFilter = null,
+            StopOrderType? stopOrderType = null,
             CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>()
@@ -391,6 +402,7 @@ namespace Bybit.Net.Clients.V5
             parameters.AddOptionalParameter("baseCoin", baseAsset);
             parameters.AddOptionalParameter("settleCoin", settleAsset);
             parameters.AddOptionalParameter("orderFilter", EnumConverter.GetString(orderFilter));
+            parameters.AddOptionalParameter("stopOrderType", EnumConverter.GetString(stopOrderType));
 
             return await _baseClient.SendRequestAsync<BybitResponse<BybitOrderId>>(_baseClient.GetUrl("v5/order/cancel-all"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
@@ -439,17 +451,13 @@ namespace Bybit.Net.Clients.V5
 
         /// <inheritdoc />
         public async Task<WebCallResult<BybitBorrowQuota>> GetBorrowQuotaAsync(
-            Category category,
             string symbol,
             OrderSide side,
             CancellationToken ct = default)
         {
-            if (category != Category.Spot)
-                throw new ArgumentException("Category should be spot");
-
             var parameters = new Dictionary<string, object>()
             {
-                { "category", EnumConverter.GetString(category) },
+                { "category", EnumConverter.GetString(Category.Spot) },
                 { "symbol", symbol },
                 { "side", EnumConverter.GetString(side) },
             };
@@ -462,16 +470,29 @@ namespace Bybit.Net.Clients.V5
         #region Set Disconnect Cancel All
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitBorrowQuota>> SetDisconnectCancelAllAsync(
+        public async Task<WebCallResult> SetDisconnectCancelAllAsync(
             int windowSeconds,
+            ProductType? productType = null,
             CancellationToken ct = default)
         {
-            var parameters = new Dictionary<string, object>()
+            var parameters = new ParameterCollection
             {
                 { "timeWindow", windowSeconds },
             };
+            parameters.AddOptionalEnum("product", productType);
 
-            return await _baseClient.SendRequestAsync<BybitBorrowQuota>(_baseClient.GetUrl("v5/order/disconnected-cancel-all"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync(_baseClient.GetUrl("v5/order/disconnected-cancel-all"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region Get Disconnect Cancel All
+
+        /// <inheritdoc />
+        public async Task<WebCallResult<IEnumerable<BybitDcpStatus>>> GetDisconnectCancelAllConfigAsync(CancellationToken ct = default)
+        {
+            var result = await _baseClient.SendRequestAsync<BybitDcpStatusWrapper>(_baseClient.GetUrl("v5/account/query-dcp-info"), HttpMethod.Get, ct, null, true).ConfigureAwait(false);
+            return result.As<IEnumerable<BybitDcpStatus>>(result.Data?.Infos);
         }
 
         #endregion
@@ -540,6 +561,25 @@ namespace Bybit.Net.Clients.V5
 
         #endregion
 
+        #region Confirm Risk Limit
+
+        /// <inheritdoc />
+        public async Task<WebCallResult> ConfirmRiskLimitAsync(
+            Category category,
+            string symbol,
+            CancellationToken ct = default)
+        {
+            var parameters = new Dictionary<string, object>()
+            {
+                { "category", EnumConverter.GetString(category) },
+                { "symbol", symbol }
+            };
+
+            return await _baseClient.SendRequestAsync(_baseClient.GetUrl("v5/position/confirm-pending-mmr"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+        }
+
+        #endregion
+
         #region Get Asset Exchange History
 
         /// <inheritdoc />
@@ -572,6 +612,8 @@ namespace Bybit.Net.Clients.V5
             Category category,
             string? symbol = null,
             DateTime? expiryDate = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
             int? limit = null,
             string? cursor = null,
             CancellationToken ct = default)
@@ -581,6 +623,8 @@ namespace Bybit.Net.Clients.V5
                 { "category", EnumConverter.GetString(category) }
             };
             parameters.AddOptionalParameter("symbol", symbol);
+            parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
+            parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("expDate", DateTimeConverter.ConvertToMilliseconds(expiryDate));
             parameters.AddOptionalParameter("limit", limit);
             parameters.AddOptionalParameter("cursor", cursor);
@@ -596,6 +640,8 @@ namespace Bybit.Net.Clients.V5
         public async Task<WebCallResult<BybitResponse<BybitSettlementRecord>>> GetSettlementHistoryAsync(
             Category category,
             string? symbol = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
             int? limit = null,
             string? cursor = null,
             CancellationToken ct = default)
@@ -605,6 +651,8 @@ namespace Bybit.Net.Clients.V5
                 { "category", EnumConverter.GetString(category) }
             };
             parameters.AddOptionalParameter("symbol", symbol);
+            parameters.AddOptionalParameter("startTime", DateTimeConverter.ConvertToMilliseconds(startTime));
+            parameters.AddOptionalParameter("endTime", DateTimeConverter.ConvertToMilliseconds(endTime));
             parameters.AddOptionalParameter("limit", limit);
             parameters.AddOptionalParameter("cursor", cursor);
 
@@ -693,7 +741,7 @@ namespace Bybit.Net.Clients.V5
         #region Purchase Leverage Token
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitLeverageTokenRecord>> PurchaseLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = null, CancellationToken ct = default)
+        public async Task<WebCallResult<BybitLeverageTokenPurchase>> PurchaseLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>()
             {
@@ -703,7 +751,7 @@ namespace Bybit.Net.Clients.V5
 
             parameters.AddOptionalParameter("serialNo", clientOrderId);
 
-            return await _baseClient.SendRequestAsync<BybitLeverageTokenRecord>(_baseClient.GetUrl("v5/position/spot-lever-token/purchase"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitLeverageTokenPurchase>(_baseClient.GetUrl("v5/spot-lever-token/purchase"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion
@@ -711,7 +759,7 @@ namespace Bybit.Net.Clients.V5
         #region Redeem Leverage Token
 
         /// <inheritdoc />
-        public async Task<WebCallResult<BybitLeverageTokenRecord>> RedeemLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = null, CancellationToken ct = default)
+        public async Task<WebCallResult<BybitLeverageTokenRedemption>> RedeemLeverageTokenAsync(string token, decimal quantity, string? clientOrderId = null, CancellationToken ct = default)
         {
             var parameters = new Dictionary<string, object>()
             {
@@ -721,7 +769,7 @@ namespace Bybit.Net.Clients.V5
 
             parameters.AddOptionalParameter("serialNo", clientOrderId);
 
-            return await _baseClient.SendRequestAsync<BybitLeverageTokenRecord>(_baseClient.GetUrl("v5/position/spot-lever-token/redeem"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
+            return await _baseClient.SendRequestAsync<BybitLeverageTokenRedemption>(_baseClient.GetUrl("v5/spot-lever-token/redeem"), HttpMethod.Post, ct, parameters, true).ConfigureAwait(false);
         }
 
         #endregion
@@ -740,7 +788,7 @@ namespace Bybit.Net.Clients.V5
             parameters.AddOptionalParameter("orderId", orderId);
             parameters.AddOptionalParameter("ltCoin", token);
 
-            var result = await _baseClient.SendRequestAsync<BybitResponse<BybitLeverageTokenHistory>>(_baseClient.GetUrl("v5/position/spot-lever-token/order-record"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            var result = await _baseClient.SendRequestAsync<BybitResponse<BybitLeverageTokenHistory>>(_baseClient.GetUrl("v5/spot-lever-token/order-record"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
             if (!result)
                 return result.As<IEnumerable<BybitLeverageTokenHistory>>(default);
 
